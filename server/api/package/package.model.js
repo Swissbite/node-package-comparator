@@ -12,10 +12,10 @@ var PluginSchema = new Schema({
   date: String,
   github: String,
   time: String,
-  keywords: [String],
+  keywords: {type: [String], index: true},
   npmStars: Number,
   githubForks: {type: Number, index: true},
   githubStars: {type: Number, index: true}
 });
 
-module.exports = mongoose.model('Plugin', PluginSchema);
+module.exports = mongoose.model('Package', PluginSchema);

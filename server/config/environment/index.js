@@ -40,7 +40,13 @@ var all = {
       }
     }
   },
-
+  github: {
+    hostname: 'api.github.com',
+    port: 443,
+    headers: {
+      'user-agent': 'node v.0.10'
+    }
+  }
 };
 
 // Export the config object based on the NODE_ENV
