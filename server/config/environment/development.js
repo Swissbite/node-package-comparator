@@ -6,7 +6,7 @@ module.exports = {
   // MongoDB connection options
 
   mongo: {
-    uri: 'mongodb://local-test:local-test-user-pw@ds047950.mongolab.com:47950/node-package-comperator-dev'
+    uri: 'mongodb://localhost/npmplugincomperator-dev'
   },
   registry: {
     uri: 'http://localhost:5984/registry/',
