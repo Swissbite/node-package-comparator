@@ -84,13 +84,13 @@ exports.keywords = function (req, res) {
       new Scheduler({type: 'keywords'}).run();
     }
   });
-  Scheduler.find({type: 'packages'}, 'name', function(err, schedulers) {
+  Scheduler.find({type: 'package'}, 'keyword', function(err, schedulers) {
     if (err) {
       return handleError(res, err);
     }
     res.json(200, schedulers);
   });
-}
+};
 
 function handleError(res, err) {
   return res.send(500, err);

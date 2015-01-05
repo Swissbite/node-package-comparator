@@ -9,8 +9,8 @@ var Thing = require('../api/thing/thing.model');
 var User = require('../api/user/user.model');
 var Package = require('../api/package/package.model');
 var Scheduler = require('../api/scheduler/scheduler.model');
-Package.find({}).remove(function() {});
-Scheduler.find({}).remove(function() {});
+//Package.find({}).remove(function() {});
+//Scheduler.find({}).remove(function() {});
 
 Thing.find({}).remove(function() {
   Thing.create({

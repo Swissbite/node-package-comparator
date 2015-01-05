@@ -2,11 +2,11 @@
 
 var _ = require('lodash');
 var Scheduler = require('../scheduler/scheduler.model');
-var Plugin = require('./package.model.js');
+var Package = require('./package.model.js');
 
 // Get list of plugins
 exports.index = function (req, res) {
-  Plugin.find(function (err, plugins) {
+  Package.find(function (err, plugins) {
     if (err) {
       return handleError(res, err);
     }
@@ -16,7 +16,7 @@ exports.index = function (req, res) {
 
 // Get a single package
 exports.show = function (req, res) {
-  Plugin.findById(req.params.id, function (err, plugin) {
+  Package.findById(req.params.id, function (err, plugin) {
     if (err) {
       return handleError(res, err);
     }
@@ -28,8 +28,13 @@ exports.show = function (req, res) {
 };
 
 exports.byKeyword = function (req, res) {
-  Scheduler.findOne({})
-  Plugin.find({keyword: {$match: [req.params.keyword]}}, function (err, plugins) {
+  var keyword = req.params.keyword;
+  Scheduler.findOne({keyword: keyword, type: 'package'}, function(err, scheduler) {
+    if (!err && scheduler) {
+      scheduler.run();
+    }
+  });
+  Package.find({keyword: {$elemMatch: {$regex: new RegExp('^' + keyword + '$', 'i')}}}, function (err, plugins) {
     if (err) {
       return handleError(res, err);
     }
@@ -41,5 +46,6 @@ exports.byKeyword = function (req, res) {
 };
 
 function handleError(res, err) {
+  console.log(err);
   return res.send(500, err);
 }

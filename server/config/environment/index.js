@@ -46,6 +46,11 @@ var all = {
     headers: {
       'user-agent': 'node v.0.10'
     }
+  },
+  registry: {
+    uri: 'https://registry.npmjs.org/',
+    designDocumentPath: '-/',
+    byKeywordView: '_view/byKeyword'
   }
 };
 
