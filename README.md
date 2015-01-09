@@ -1,4 +1,4 @@
-# Node Package Comperator
+# Node Package Comparator
 ## About
 
 On [npmjs.com](https://www.npmjs.com/) you are able to find packages. 
@@ -19,3 +19,6 @@ Just search by keyword exact one keyword and sort. If the data is older than 24h
 - Create other admin accounts.
 
 Currently, I see no benefit for a user to have an account.
+
+## License
+Node Package Comparator is licensed under [GNU GPL 3.0](http://www.gnu.org/licenses/gpl).

@@ -1,20 +1,18 @@
 /**
- * Node Package Comparator
- * Copyright (C) 2015  David Daester
+ * This file is part of Node Package Comparator.
  *
- * This program is free software; you can redistribute it and/or modify
+ * Node Package Comparator is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * the Free Software Foundation, either version 3 of the License, or
  * any later version.
  *
- * This program is distributed in the hope that it will be useful,
+ * Node Package Comparator is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *  You should have received a copy of the GNU General Public License
+ *   along with Node Package Comparator.  If not, see <http://www.gnu.org/licenses/>.
  */
 'use strict';
 
@@ -26,7 +24,7 @@ var mongoose = require('mongoose'),
   environment = require('../../config/environment'),
   Package = require('../package/package.model');
 
-var SchedulerSchema = new Schema({
+  var SchedulerSchema = new Schema({
   type: {type: String, enum: ['keywords', 'package'], required: true, index: true},
   keyword: {type: String, index: {unique: true, sparse: true}},
   active: Boolean,
@@ -35,6 +33,7 @@ var SchedulerSchema = new Schema({
 });
 
 //Defined at the end of the file while module.export
+
 var Scheduler;
 
 /**
@@ -50,8 +49,10 @@ function responseHandler(response, callback) {
   });
   response.on('end', function () {
     try {
+
+      console.log(data);
       data = JSON.parse(data);
-      callback(null, data)
+      callback(null, data);
     } catch (err) {
       callback(err);
     }
@@ -212,25 +213,29 @@ function refreshPackageScheduler(instance) {
     function createCall(name) {
       return function (cb) {
         getRegistryData(registry.uri + name, {}, function (err, npmInfo) {
+
           var packageData;
           if (err) {
+            console.log(err);
             cb(err);
             return void 0;
           }
           packageData = {
             name: npmInfo.name,
             description: npmInfo.description,
-            version: npmInfo.dist - tags.latest,
+            version: npmInfo["dist-tags"].latest,
             lastModified: npmInfo.time.modified,
             author: npmInfo.author.name,
-            npmStars: npmInfo.users ? npmInfo.users.length : 0
+            npmStars: npmInfo.users ? npmInfo.users.length : 0,
+            keywords: npmInfo.keywords
           };
 
-          if (!npmInfo.homepage || !npmInfo.repository)
+          if (!npmInfo.homepage || !npmInfo.repository) {
             console.log(name, npmInfo.homepage, npmInfo.repository);
-          cb();
+          }
+          cb(null, packageData);
         });
-      }
+      };
     }
 
     _.forEach(data.rows, function (obj) {
