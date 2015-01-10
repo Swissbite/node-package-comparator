@@ -12,7 +12,8 @@ function requiredProcessEnv(name) {
 
 // All configurations will extend these options
 // ============================================
-var all = {
+var all;
+all = {
   env: process.env.NODE_ENV,
 
   // Root path of server
@@ -41,16 +42,41 @@ var all = {
     }
   },
   github: {
-    hostname: 'api.github.com',
-    port: 443,
-    headers: {
-      'user-agent': 'node v.0.10'
+    httpBase: {
+      hostname: 'api.github.com',
+      port: 443,
+      headers: {
+        'user-agent': 'node v.0.10'
+      }
+    },
+    repoPathPrefix: '/repos/',
+    forkPostfix: '/forks',
+    starPostfix: '/stargazers',
+    /**
+     * Creates github path for repo.
+     * @param {string} owner - project owner
+     * @param {string} project
+     * @param {string} postfix
+     * @param {string} clientId
+     * @param {string} clientSecret
+     * @returns {string} api path.
+     */
+    createPath: function (owner, project, postfix, clientId, clientSecret) {
+      var path = this.repoPathPrefix + owner + '/' + project;
+      if (postfix && postfix.length > 0) {
+        path += postfix;
+      }
+      if (clientId && clientSecret) {
+        path += '?client_id=' + clientId + '&client_secret=' + clientSecret;
+      }
+      return path;
     }
+
   },
   registry: {
     uri: 'https://registry.npmjs.org/',
-    designDocumentPath: '-/',
-    byKeywordView: '_view/byKeyword'
+    byKeywordView: '-/_view/byKeyword',
+    byStarPackageView: '-/_view/browseStarPackage'
   }
 };
 

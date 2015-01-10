@@ -24,7 +24,12 @@ var mongoose = require('mongoose'),
   environment = require('../../config/environment'),
   Package = require('../package/package.model');
 
-  var SchedulerSchema = new Schema({
+
+/**
+ * @type {Schema}
+ * @name SchedulerSchema
+ */
+var SchedulerSchema = new Schema({
   type: {type: String, enum: ['keywords', 'package'], required: true, index: true},
   keyword: {type: String, index: {unique: true, sparse: true}},
   active: Boolean,
@@ -32,14 +37,23 @@ var mongoose = require('mongoose'),
   lastFinish: Date
 });
 
-//Defined at the end of the file while module.export
-
+/**
+ * Defined at the end of the file while module.export
+ * @typedef Scheduler
+ * @type {Model}
+ * @property {string} type - Either keywords or package
+ * @property {string} keyword - The keyword for package type
+ * @property {boolean} active - Is update active
+ * @property {Date} lastRun - When last update started
+ * @property {Date} lastFinish - When last update finished.
+ * @property {function) run - Refreshing the data.
+ */
 var Scheduler;
 
 /**
  * Generic response handler.
  * @param response The http(s) response.
- * @param callback The callback to be called with err and data.
+ * @param {function} callback The callback to be called with err and data.
  */
 function responseHandler(response, callback) {
   var data = '';
@@ -49,8 +63,6 @@ function responseHandler(response, callback) {
   });
   response.on('end', function () {
     try {
-
-      console.log(data);
       data = JSON.parse(data);
       callback(null, data);
     } catch (err) {
@@ -60,7 +72,7 @@ function responseHandler(response, callback) {
 }
 /**
  * Helper to define if the url is either https or http.
- * @param baseUrl Base url. Has to start with http:// or https://
+ * @param {string} baseUrl Base url. Has to start with http:// or https://
  * @returns exports request client lib, that means either https or http.
  */
 function getRequestClientLib(baseUrl) {
@@ -124,6 +136,34 @@ function getRegistryData(url, queryParams, callback) {
   });
 }
 
+/**
+ * Check if the url is a github url. If so, then extract account and project.
+ * If not, return null.
+ * @param url Found url.
+ * @returns {object | null} Returns infos about github if there are some.
+ */
+function checkUrlForGithubInfos(url) {
+  var tmp, projectName;
+  if (!url) {
+    return null;
+  }
+  tmp = url.match(/github.com[\/:]([\w\d-]+)\/([a-zA-Z0-9\-_.]+)$/i) || [];
+  if (tmp.length === 3) {
+    projectName = tmp[2].match(/(.+)\.git$/i) || [];
+    return {
+      account: tmp[1],
+      project: projectName.length === 2 ? projectName[0] : tmp[2]
+    };
+  }
+
+
+}
+
+/**
+ * Refreshing the keyword schedulers.
+ * @param {Scheduler} instance - {Scheduler~type} must be keywords.
+ * @returns {boolean} true if refresh occurred, false if not.
+ */
 function refreshKeywordsScheduler(instance) {
   var toRefresh = checkIfAllowedToRun(instance);
   if (toRefresh) {
@@ -135,7 +175,7 @@ function refreshKeywordsScheduler(instance) {
         return void 0;
       }
 
-      getRegistryData(registry.uri + registry.designDocumentPath + registry.byKeywordView, {
+      getRegistryData(registry.uri + registry.byKeywordView, {
         group_level: 1
       }, function updateAllPackageSchedulers(err, data) {
         var keywords = [];
@@ -202,7 +242,6 @@ function refreshPackageScheduler(instance) {
   var scheduler = instance;
   var registry = environment.registry;
   getRegistryData(registry.uri +
-  registry.designDocumentPath +
   registry.byKeywordView, {
     group_level: 2,
     startkey: [scheduler.keyword],
@@ -214,26 +253,36 @@ function refreshPackageScheduler(instance) {
       return function (cb) {
         getRegistryData(registry.uri + name, {}, function (err, npmInfo) {
 
-          var packageData;
+          var packageData, githubData;
           if (err) {
-            console.log(err);
+            console.log('err');
             cb(err);
             return void 0;
           }
+          githubData = checkUrlForGithubInfos(npmInfo.homepage);
+          if (!githubData && npmInfo.repository && npmInfo.repository.type === 'git' && npmInfo.repository.url) {
+            githubData = checkUrlForGithubInfos(npmInfo.repository.url);
+          }
           packageData = {
             name: npmInfo.name,
-            description: npmInfo.description,
+            description: npmInfo.description || null,
             version: npmInfo["dist-tags"].latest,
             lastModified: npmInfo.time.modified,
-            author: npmInfo.author.name,
-            npmStars: npmInfo.users ? npmInfo.users.length : 0,
-            keywords: npmInfo.keywords
+            author: (npmInfo.author && npmInfo.author.name)? npmInfo.author.name: null,
+            keywords: npmInfo.keywords || [],
+            github: githubData
           };
 
-          if (!npmInfo.homepage || !npmInfo.repository) {
-            console.log(name, npmInfo.homepage, npmInfo.repository);
-          }
-          cb(null, packageData);
+          Package.findOneAndUpdate({name: packageData.name}, packageData, {upsert: true}, function(err, doc) {
+            if (err) {
+              console.log(err);
+              cb(err);
+              return void 0;
+            }
+
+            cb(err, doc);
+          });
+
         });
       };
     }

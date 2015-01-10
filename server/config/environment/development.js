@@ -6,12 +6,10 @@ module.exports = {
   // MongoDB connection options
 
   mongo: {
-    uri: 'mongodb://localhost/nodepackagecomperator-dev'
+    uri: 'mongodb://localhost/nodepackagecomparator-dev'
   },
   registry: {
-    uri: 'http://localhost:5984/registry/',
-    designDocumentPath: '_design/app/',
-    byKeywordView: '_view/byKeyword'
+    uri: 'http://localhost:5984/registry/_design/app/_rewrite/'
 
   },
   seedDB: true

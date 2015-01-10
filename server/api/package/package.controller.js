@@ -34,7 +34,7 @@ exports.byKeyword = function (req, res) {
       scheduler.run();
     }
   });
-  Package.find({keyword: {$elemMatch: {$regex: new RegExp('^' + keyword + '$', 'i')}}}, function (err, plugins) {
+  Package.find({keywords: {$elemMatch: {$regex: new RegExp('^' + keyword + '$', 'i')}}}, function (err, plugins) {
     if (err) {
       return handleError(res, err);
     }
