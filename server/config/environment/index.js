@@ -42,7 +42,7 @@ all = {
     }
   },
   github: {
-    httpBase: {
+    httpsBase: {
       hostname: 'api.github.com',
       port: 443,
       headers: {
@@ -50,24 +50,18 @@ all = {
       }
     },
     repoPathPrefix: '/repos/',
-    forkPostfix: '/forks',
-    starPostfix: '/stargazers',
+    clientId: process.env.GITHUB_CLIENT_ID,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET,
     /**
      * Creates github path for repo.
      * @param {string} owner - project owner
      * @param {string} project
-     * @param {string} postfix
-     * @param {string} clientId
-     * @param {string} clientSecret
      * @returns {string} api path.
      */
-    createPath: function (owner, project, postfix, clientId, clientSecret) {
+    createRepoPath: function (owner, project) {
       var path = this.repoPathPrefix + owner + '/' + project;
-      if (postfix && postfix.length > 0) {
-        path += postfix;
-      }
-      if (clientId && clientSecret) {
-        path += '?client_id=' + clientId + '&client_secret=' + clientSecret;
+      if (this.clientId && this.clientSecret) {
+        path += '?client_id=' + this.clientId + '&client_secret=' + this.clientSecret;
       }
       return path;
     }

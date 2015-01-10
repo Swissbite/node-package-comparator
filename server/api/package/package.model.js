@@ -9,7 +9,7 @@ var PackageSchema = new Schema({
   version: String,
   readme: String,
   author: String,
-  lastModified: {type: Date, index: true},
+  lastModified: {type: Date, index: true, spatial: true},
   github: {
     account: String,
     project: String
@@ -17,7 +17,8 @@ var PackageSchema = new Schema({
   keywords: {type: [String], index: true},
   npmStars: Number,
   githubForks: {type: Number, index: true},
-  githubStars: {type: Number, index: true}
+  githubStars: {type: Number, index: true},
+  githubWatches: {type: Number, index: true}
 });
 
 /**

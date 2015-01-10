@@ -20,6 +20,8 @@ var mongoose = require('mongoose'),
   moment = require('moment'),
   _ = require('lodash'),
   async = require('async'),
+  https = require('https'),
+  http = require('http'),
   Schema = mongoose.Schema,
   environment = require('../../config/environment'),
   Package = require('../package/package.model');
@@ -78,9 +80,9 @@ function responseHandler(response, callback) {
 function getRequestClientLib(baseUrl) {
   var match = baseUrl.match(/^https:\/\//i);
   if (match && match.length === 1) {
-    return require('https');
+    return https;
   }
-  return require('http');
+  return http;
 }
 
 /**
@@ -255,7 +257,7 @@ function refreshPackageScheduler(instance) {
 
           var packageData, githubData;
           if (err) {
-            console.log('err');
+            console.log(err);
             cb(err);
             return void 0;
           }
@@ -267,22 +269,79 @@ function refreshPackageScheduler(instance) {
             name: npmInfo.name,
             description: npmInfo.description || null,
             version: npmInfo["dist-tags"].latest,
-            lastModified: npmInfo.time.modified,
-            author: (npmInfo.author && npmInfo.author.name)? npmInfo.author.name: null,
+            lastModified: (npmInfo.time && npmInfo.time.modified) ? npmInfo.time.modified: null,
+            author: (npmInfo.author && npmInfo.author.name) ? npmInfo.author.name : null,
             keywords: npmInfo.keywords || [],
             github: githubData
           };
 
-          Package.findOneAndUpdate({name: packageData.name}, packageData, {upsert: true}, function(err, doc) {
+          async.parallel({
+            npmStars: function (cb) {
+              getRegistryData(registry.uri + registry.byStarPackageView, {
+                group_level: 1,
+                startkey: [packageData.name],
+                endkey: [packageData.name, {}, {}]
+              }, function (err, data) {
+                if (err) {
+                  cb(err);
+                  return void 0;
+                }
+                if (data.rows.length > 0) {
+                  cb(null, data.rows[0].value);
+                }
+                else {
+                  cb(null, 0);
+                }
+              });
+            },
+            githubMetrics: function (cb) {
+
+              var githubEnv = environment.github;
+              if (!packageData.github) {
+                cb(null, null);
+                return void 0;
+              }
+              console.log(githubEnv.createRepoPath(packageData.github.account, packageData.github.project));
+              https.get(_.merge({path: githubEnv.createRepoPath(packageData.github.account, packageData.github.project)}, githubEnv.httpsBase), function (res) {
+                responseHandler(res, function (err, data) {
+                  if (err) {
+                    console.log(err);
+                    cb(err);
+                    return void 0;
+                  } else if (200 !== res.statusCode) {
+                    console.log(res.statusCode, data);
+                    cb(data);
+                    return void 0;
+                  }
+                  cb(null,  {
+                    githubForks: data.forks_count || 0,
+                    githubStars: data.stargazers_count || 0,
+                    githubWatches: data.watchers_count || 0
+                  });
+                });
+              });
+
+
+            }
+          }, function (err, results) {
             if (err) {
-              console.log(err);
               cb(err);
               return void 0;
             }
+            packageData.npmStars = results.npmStars;
+            if (results.githubMetrics) {
+              _.merge(packageData, results.githubMetrics);
+            }
+            Package.findOneAndUpdate({name: packageData.name}, packageData, {upsert: true}, function (err, doc) {
+              if (err) {
+                console.log(err);
+                cb(err);
+                return void 0;
+              }
 
-            cb(err, doc);
+              cb(err, doc);
+            });
           });
-
         });
       };
     }
