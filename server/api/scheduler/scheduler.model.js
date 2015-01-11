@@ -154,7 +154,7 @@ function checkUrlForGithubInfos(url) {
     projectName = tmp[2].match(/(.+)\.git$/i) || [];
     return {
       account: tmp[1],
-      project: projectName.length === 2 ? projectName[0] : tmp[2]
+      project: projectName.length === 2 ? projectName[1] : tmp[2]
     };
   }
 
@@ -238,123 +238,125 @@ function refreshKeywordsScheduler(instance) {
 
 function refreshPackageScheduler(instance) {
   console.log('called ' + instance.keyword);
-  /*var toRefresh = checkIfAllowedToRun(instance);
-   if (toRefresh) {
-   setActiveAndLastRun(instance, function updatePackages(err, scheduler) {*/
-  var scheduler = instance;
-  var registry = environment.registry;
-  getRegistryData(registry.uri +
-  registry.byKeywordView, {
-    group_level: 2,
-    startkey: [scheduler.keyword],
-    endkey: [scheduler.keyword, {}, {}]
-  }, function (err, data) {
-    var asyncUpdateCalls = [];
+  var toRefresh = checkIfAllowedToRun(instance);
+  if (toRefresh) {
+    setActiveAndLastRun(instance, function updatePackages(err, scheduler) {
+      var registry = environment.registry;
+      getRegistryData(registry.uri +
+      registry.byKeywordView, {
+        group_level: 2,
+        startkey: [scheduler.keyword],
+        endkey: [scheduler.keyword, {}, {}]
+      }, function (err, data) {
+        var asyncUpdateCalls = [];
 
-    function createCall(name) {
-      return function (cb) {
-        getRegistryData(registry.uri + name, {}, function (err, npmInfo) {
+        function createCall(name) {
+          return function (cb) {
+            getRegistryData(registry.uri + name, {}, function (err, npmInfo) {
 
-          var packageData, githubData;
-          if (err) {
-            console.log(err);
-            cb(err);
-            return void 0;
-          }
-          githubData = checkUrlForGithubInfos(npmInfo.homepage);
-          if (!githubData && npmInfo.repository && npmInfo.repository.type === 'git' && npmInfo.repository.url) {
-            githubData = checkUrlForGithubInfos(npmInfo.repository.url);
-          }
-          packageData = {
-            name: npmInfo.name,
-            description: npmInfo.description || null,
-            version: npmInfo["dist-tags"].latest,
-            lastModified: (npmInfo.time && npmInfo.time.modified) ? npmInfo.time.modified: null,
-            author: (npmInfo.author && npmInfo.author.name) ? npmInfo.author.name : null,
-            keywords: npmInfo.keywords || [],
-            github: githubData
-          };
-
-          async.parallel({
-            npmStars: function (cb) {
-              getRegistryData(registry.uri + registry.byStarPackageView, {
-                group_level: 1,
-                startkey: [packageData.name],
-                endkey: [packageData.name, {}, {}]
-              }, function (err, data) {
-                if (err) {
-                  cb(err);
-                  return void 0;
-                }
-                if (data.rows.length > 0) {
-                  cb(null, data.rows[0].value);
-                }
-                else {
-                  cb(null, 0);
-                }
-              });
-            },
-            githubMetrics: function (cb) {
-
-              var githubEnv = environment.github;
-              if (!packageData.github) {
-                cb(null, null);
-                return void 0;
-              }
-              console.log(githubEnv.createRepoPath(packageData.github.account, packageData.github.project));
-              https.get(_.merge({path: githubEnv.createRepoPath(packageData.github.account, packageData.github.project)}, githubEnv.httpsBase), function (res) {
-                responseHandler(res, function (err, data) {
-                  if (err) {
-                    console.log(err);
-                    cb(err);
-                    return void 0;
-                  } else if (200 !== res.statusCode) {
-                    console.log(res.statusCode, data);
-                    cb(data);
-                    return void 0;
-                  }
-                  cb(null,  {
-                    githubForks: data.forks_count || 0,
-                    githubStars: data.stargazers_count || 0,
-                    githubWatches: data.watchers_count || 0
-                  });
-                });
-              });
-
-
-            }
-          }, function (err, results) {
-            if (err) {
-              cb(err);
-              return void 0;
-            }
-            packageData.npmStars = results.npmStars;
-            if (results.githubMetrics) {
-              _.merge(packageData, results.githubMetrics);
-            }
-            Package.findOneAndUpdate({name: packageData.name}, packageData, {upsert: true}, function (err, doc) {
+              var packageData, githubData;
               if (err) {
                 console.log(err);
                 cb(err);
                 return void 0;
               }
+              githubData = checkUrlForGithubInfos(npmInfo.homepage);
+              if (!githubData && npmInfo.repository && npmInfo.repository.type === 'git' && npmInfo.repository.url) {
+                githubData = checkUrlForGithubInfos(npmInfo.repository.url);
+              }
+              packageData = {
+                name: npmInfo.name,
+                description: npmInfo.description || null,
+                version: npmInfo["dist-tags"].latest,
+                lastModified: (npmInfo.time && npmInfo.time.modified) ? npmInfo.time.modified : null,
+                author: (npmInfo.author && npmInfo.author.name) ? npmInfo.author.name : null,
+                keywords: npmInfo.keywords || [],
+                github: githubData
+              };
 
-              cb(err, doc);
+
+              async.parallel({
+                npmStars: function (cb) {
+                  getRegistryData(registry.uri + registry.byStarPackageView, {
+                    group_level: 1,
+                    startkey: [packageData.name],
+                    endkey: [packageData.name, {}, {}]
+                  }, function (err, data) {
+                    if (err) {
+                      cb(err);
+                      return void 0;
+                    }
+                    if (data.rows.length > 0) {
+                      cb(null, data.rows[0].value);
+                    }
+                    else {
+                      cb(null, 0);
+                    }
+                  });
+                },
+                githubMetrics: function (cb) {
+
+                  var githubEnv = environment.github;
+                  if (!packageData.github) {
+                    cb(null, null);
+                    return void 0;
+                  }
+                  console.log(githubEnv.createRepoPath(packageData.github.account, packageData.github.project));
+                  https.get(_.merge({path: githubEnv.createRepoPath(packageData.github.account, packageData.github.project)}, githubEnv.httpsBase), function (res) {
+                    responseHandler(res, function (err, data) {
+                      if (err) {
+                        console.log(err);
+                        cb(err);
+                        return void 0;
+                      } else if (200 !== res.statusCode) {
+                        console.log(res.statusCode, data);
+                        cb(data);
+                        return void 0;
+                      }
+                      cb(null, {
+                        githubForks: data.forks_count || 0,
+                        githubStars: data.stargazers_count || 0,
+                        githubWatches: data.watchers_count || 0
+                      });
+                    });
+                  });
+
+
+                }
+              }, function (err, results) {
+                if (err) {
+                  cb(err);
+                  return void 0;
+                }
+                packageData.npmStars = results.npmStars;
+                if (results.githubMetrics) {
+                  _.merge(packageData, results.githubMetrics);
+                }
+                Package.findOneAndUpdate({name: packageData.name}, packageData, {upsert: true}, function (err, doc) {
+                  if (err) {
+                    console.log(err);
+                    cb(err);
+                    return void 0;
+                  }
+                  cb(err, doc);
+                });
+              });
             });
+          };
+        }
+
+        _.forEach(data.rows, function (obj) {
+          asyncUpdateCalls.push(createCall(obj.key[1]));
+        });
+        console.log('count async calls:', asyncUpdateCalls.length);
+        async.parallel(asyncUpdateCalls, function () {
+          setDoneAndLastFinsh(scheduler, function () {/*noop*/
           });
         });
-      };
-    }
-
-    _.forEach(data.rows, function (obj) {
-      asyncUpdateCalls.push(createCall(obj.key[1]));
+      });
     });
-    console.log('count async calls:', asyncUpdateCalls.length);
-    async.parallel(asyncUpdateCalls);
-  });
-  /*});
-   }
-   return toRefresh;*/
+  }
+  return toRefresh;
 }
 
 SchedulerSchema.methods.run = function run() {
