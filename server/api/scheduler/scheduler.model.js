@@ -308,9 +308,10 @@ function refreshPackageScheduler(instance) {
                         console.log(err);
                         cb(err);
                         return void 0;
-                      } else if (200 !== res.statusCode) {
-                        console.log(res.statusCode, data);
-                        cb(data);
+                      }
+                      if (200 !== res.statusCode) {
+                        console.log(res.statusCode, data.message, res.req.path);
+                        cb(null, {});
                         return void 0;
                       }
                       cb(null, {
@@ -319,6 +320,9 @@ function refreshPackageScheduler(instance) {
                         githubWatches: data.watchers_count || 0
                       });
                     });
+                  }).on('error', function (e) {
+                    console.log(e.message);
+                    cb(null, {});
                   });
 
 

@@ -27,6 +27,19 @@ exports.show = function (req, res) {
   });
 };
 
+exports.byName = function (req, res) {
+  var name = req.params.name;
+  Package.findOne({name: name}, function (err, doc) {
+    if (err) {
+      return handleError(res, err);
+    }
+    if (!doc) {
+      return res.send(404);
+    }
+    return res.json(doc);
+  })
+};
+
 exports.byKeyword = function (req, res) {
   var keyword = req.params.keyword;
   Scheduler.findOne({keyword: keyword, type: 'package'}, function(err, scheduler) {

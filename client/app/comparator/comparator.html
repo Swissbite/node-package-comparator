@@ -1,0 +1,13 @@
+<div class="container">
+  <form class="thing-form">
+    <label>Search by keyword</label>
+
+    <p class="input-group">
+      <input type="text" class="form-control" placeholder="Enter a keyword." ng-model="searchTerm">
+      <span class="input-group-btn">
+        <button type="submit" class="btn btn-primary" ng-click="comparator.compare(searchTerm)">Compare</button>
+      </span>
+    </p>
+  </form>
+  <div id="grid1" ui-grid="comparator.gridOptions" class="grid"></div>
+</div>

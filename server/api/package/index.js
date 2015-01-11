@@ -7,6 +7,7 @@ var router = express.Router();
 
 router.get('/', controller.index);
 router.get('/byKeyword/:keyword', controller.byKeyword);
+router.get('/byName/:name', controller.byName);
 router.get('/:id', controller.show);
 
 
