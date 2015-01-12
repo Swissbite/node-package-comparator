@@ -19,14 +19,5 @@ module.exports = {
             process.env.MONGOHQ_URL ||
             process.env.OPENSHIFT_MONGODB_DB_URL+process.env.OPENSHIFT_APP_NAME ||
             'mongodb://localhost/nodepackagecomperator'
-  },
-  github: {
-    clientId: process.env.GITHUB_CLIENT_ID,
-    clientSecret: process.env.GITHUB_CLIENT_SECRET
-  },
-  registry: {
-    uri: 'https://registry.npmjs.org/',
-    designDocumentPath: '-/',
-    byKeywordView: '_view/byKeyword'
   }
 };

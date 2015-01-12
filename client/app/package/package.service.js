@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('npmpluginComperatorApp').
+angular.module('NodePackageComperatorApp').
   value('packageURLBase', '/api/packages')
   .factory('Package', function (packageURLBase, $resource) {
     return $resource(packageURLBase + '/:id', {id: '@_id'}, {

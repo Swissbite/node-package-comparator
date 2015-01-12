@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('npmpluginComperatorApp')
+angular.module('NodePackageComperatorApp')
   .controller('LoginCtrl', function ($scope, Auth, $location) {
     $scope.user = {};
     $scope.errors = {};

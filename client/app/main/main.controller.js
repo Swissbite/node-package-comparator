@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('npmpluginComperatorApp')
+angular.module('NodePackageComperatorApp')
   .controller('MainCtrl', function ($scope, $http, socket) {
     $scope.awesomeThings = [];
 

@@ -3,7 +3,7 @@
 /**
  * Removes server error when user updates input
  */
-angular.module('npmpluginComperatorApp')
+angular.module('NodePackageComperatorApp')
   .directive('mongooseError', function () {
     return {
       restrict: 'A',

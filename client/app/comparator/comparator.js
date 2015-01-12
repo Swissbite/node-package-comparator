@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('npmpluginComperatorApp')
+angular.module('NodePackageComperatorApp')
   .config(function ($stateProvider) {
     $stateProvider
       .state('comparator', {

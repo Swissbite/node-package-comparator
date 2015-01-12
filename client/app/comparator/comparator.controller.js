@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('npmpluginComperatorApp')
+angular.module('NodePackageComperatorApp')
   .controller('ComparatorCtrl', function ($scope, Package) {
     var me = this;
     var gridOptions = {
