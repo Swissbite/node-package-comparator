@@ -4,7 +4,7 @@ angular.module('NodePackageComperatorApp')
   .config(function ($stateProvider) {
     $stateProvider
       .state('comparator', {
-        url: '/',
+        url: '/:keyword',
         templateUrl: 'app/comparator/comparator.html',
         controller: 'ComparatorCtrl as comparator'
       });

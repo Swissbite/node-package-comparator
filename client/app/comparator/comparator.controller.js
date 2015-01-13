@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('NodePackageComperatorApp')
-  .controller('ComparatorCtrl', function ($scope, Package) {
+  .controller('ComparatorCtrl', function ($scope, $stateParams, Package) {
     var me = this;
     var gridOptions = {
       enableFiltering: true,
@@ -43,4 +43,10 @@ angular.module('NodePackageComperatorApp')
     }
 
     me.compare = compare;
+    console.log($stateParams);
+    if ($stateParams.keyword) {
+      $scope.searchTerm = $stateParams.keyword;
+      compare($stateParams.keyword);
+    }
+
   });
