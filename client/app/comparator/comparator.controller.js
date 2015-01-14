@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('NodePackageComperatorApp')
-  .controller('ComparatorCtrl', function ($scope, $stateParams, Package) {
+  .controller('ComparatorCtrl', function ($scope, $stateParams, $filter, Package) {
     var me = this;
     var gridOptions = {
       enableFiltering: true,
@@ -12,7 +12,7 @@ angular.module('NodePackageComperatorApp')
         {name: 'name'},
         {name: 'description'},
         {name: 'version'},
-        {name: 'lastModified'},
+        {name: 'lastModified', field: 'lastModifiedFormatted'},
         {name: 'author'},
         {name: 'npmStars'},
         {name: 'githubForks'},
@@ -23,6 +23,9 @@ angular.module('NodePackageComperatorApp')
     };
     me.gridOptions = gridOptions;
     me.comparableData = [];
+    function formatDate(date) {
+      return $filter('date')(date, 'yy-MM-dd HH:mm');
+    }
     function compare(keyword) {
       if (keyword && keyword.length > 0) {
         Package.byKeyword({keyword: keyword}).$promise.then(function (packages) {
@@ -36,6 +39,8 @@ angular.module('NodePackageComperatorApp')
             if (!elem.hasOwnProperty('githubWatches')) {
               elem.githubWatches = 0;
             }
+            elem.lastModifiedFormatted = formatDate(elem.lastModified);
+
           });
           me.comparableData = packages;
         });
