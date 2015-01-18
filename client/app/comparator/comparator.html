@@ -5,7 +5,9 @@
     <p class="input-group">
       <input type="text" class="form-control" placeholder="Enter a keyword." ng-model="searchTerm">
       <span class="input-group-btn">
-        <button type="submit" class="btn btn-primary" ui-sref="{keyword: searchTerm}">Compare</button>
+        <a type="submit" class="btn btn-primary" ui-sref="{keyword: searchTerm}" href="" ui-sref-opts="{reload: true}">
+          Compare
+        </a>
       </span>
     </p>
   </form>
