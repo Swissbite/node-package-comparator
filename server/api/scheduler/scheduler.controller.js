@@ -93,13 +93,7 @@ exports.destroy = function (req, res) {
 };
 
 exports.keywords = function (req, res) {
-  Scheduler.findOne({type: 'keywords'}, function(err, scheduler) {
-    if (scheduler) {
-      scheduler.run();
-    } else {
-      new Scheduler({type: 'keywords'}).run();
-    }
-  });
+  Scheduler.updateKeywords();
   Scheduler.find({type: 'package'}, 'keyword', function(err, schedulers) {
     if (err) {
       return handleError(res, err);

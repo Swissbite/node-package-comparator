@@ -2,11 +2,11 @@
 
 var _ = require('lodash');
 var Scheduler = require('../scheduler/scheduler.model');
-var Package = require('./package.model.js');
+var NodePackage = require('./nodepackage.model.js');
 
 // Get list of plugins
 exports.index = function (req, res) {
-  Package.find(function (err, plugins) {
+  NodePackage.find(function (err, plugins) {
     if (err) {
       return handleError(res, err);
     }
@@ -14,22 +14,22 @@ exports.index = function (req, res) {
   });
 };
 
-// Get a single package
+// Get a single nodePackage
 exports.show = function (req, res) {
-  Package.findById(req.params.id, function (err, plugin) {
+  NodePackage.findById(req.params.id, function (err, elem) {
     if (err) {
       return handleError(res, err);
     }
-    if (!plugin) {
+    if (!elem) {
       return res.send(404);
     }
-    return res.json(plugin);
+    return res.json(elem);
   });
 };
 
 exports.byName = function (req, res) {
   var name = req.params.name;
-  Package.findOne({name: name}, function (err, doc) {
+  NodePackage.findOne({name: name}, function (err, doc) {
     if (err) {
       return handleError(res, err);
     }
@@ -42,12 +42,9 @@ exports.byName = function (req, res) {
 
 exports.byKeyword = function (req, res) {
   var keyword = req.params.keyword;
-  Scheduler.findOne({keyword: keyword, type: 'package'}, function(err, scheduler) {
-    if (!err && scheduler) {
-      scheduler.run();
-    }
-  });
-  Package.find({keywords: {$elemMatch: {$regex: new RegExp('^' + keyword + '$', 'i')}}}, function (err, plugins) {
+  Scheduler.updateKeywords();
+  Scheduler.updatePackages(keyword);
+  NodePackage.find({keywords: {$elemMatch: {$regex: new RegExp('^' + keyword + '$', 'i')}}}, function (err, plugins) {
     if (err) {
       return handleError(res, err);
     }

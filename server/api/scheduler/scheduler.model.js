@@ -24,7 +24,7 @@ var mongoose = require('mongoose'),
   http = require('http'),
   Schema = mongoose.Schema,
   environment = require('../../config/environment'),
-  Package = require('../package/package.model');
+  NodePackage = require('../nodePackage/nodepackage.model');
 
 
 /**
@@ -43,8 +43,8 @@ var SchedulerSchema = new Schema({
  * Defined at the end of the file while module.export
  * @typedef Scheduler
  * @type {Model}
- * @property {string} type - Either keywords or package
- * @property {string} keyword - The keyword for package type
+ * @property {string} type - Either keywords or nodePackage
+ * @property {string} keyword - The keyword for nodePackage type
  * @property {boolean} active - Is update active
  * @property {Date} lastRun - When last update started
  * @property {Date} lastFinish - When last update finished.
@@ -248,8 +248,14 @@ function refreshPackageScheduler(instance) {
         startkey: [scheduler.keyword],
         endkey: [scheduler.keyword, {}, {}]
       }, function (err, data) {
-        var asyncUpdateCalls = [];
+        console.log(err);
+        var asyncUpdateCalls = [], asyncDBSearchCalls = [];
 
+        /**
+         * Creates a callback function for asking the registry and githup.
+         * @param {string} name Name of the node package.
+         * @returns {Function} callback function for async.
+         */
         function createCall(name) {
           return function (cb) {
             getRegistryData(registry.uri + name, {}, function (err, npmInfo) {
@@ -336,7 +342,8 @@ function refreshPackageScheduler(instance) {
                 if (results.githubMetrics) {
                   _.merge(packageData, results.githubMetrics);
                 }
-                Package.findOneAndUpdate({name: packageData.name}, packageData, {upsert: true}, function (err, doc) {
+                packageData._lastUpdate = Date.now();
+                NodePackage.findOneAndUpdate({name: packageData.name}, packageData, {upsert: true}, function (err, doc) {
                   if (err) {
                     console.log(err);
                     cb(err);
@@ -349,12 +356,28 @@ function refreshPackageScheduler(instance) {
           };
         }
 
+        function checkIfPackageShouldBeUpatedAndAddToAsyncCalls(name) {
+          return function asyncCbFn(cb) {
+            NodePackage.findOne({name: name}, function (err, pkg) {
+              if (err) {
+                cb(err);
+                return void 0;
+              }
+              if (!pkg || moment().subtract(1, 'day').isAfter(pkg._lastUpdate)) {
+                asyncUpdateCalls.push(createCall(name));
+              }
+              cb();
+            });
+          };
+        }
+
         _.forEach(data.rows, function (obj) {
-          asyncUpdateCalls.push(createCall(obj.key[1]));
+          asyncDBSearchCalls.push(checkIfPackageShouldBeUpatedAndAddToAsyncCalls(obj.key[1]));
         });
-        console.log('count async calls:', asyncUpdateCalls.length);
-        async.parallel(asyncUpdateCalls, function () {
-          setDoneAndLastFinsh(scheduler, function () {/*noop*/
+        async.parallel(asyncDBSearchCalls, function () {
+          async.parallel(asyncUpdateCalls, function () {
+            setDoneAndLastFinsh(scheduler, function () {/*noop*/
+            });
           });
         });
       });
@@ -372,5 +395,36 @@ SchedulerSchema.methods.run = function run() {
   }
   return false;
 };
+
+SchedulerSchema.static('updateKeywords', function (cb) {
+  Scheduler.findOne({type: 'keywords'}, function (err, scheduler) {
+    if (!scheduler) {
+      scheduler = new Scheduler({type: 'keywords'});
+    }
+    if (cb && 'function' === typeof cb) {
+      cb(scheduler.run());
+    } else {
+      scheduler.run();
+    }
+  })
+});
+
+SchedulerSchema.static('updatePackages', function (keyword, cb) {
+  console.log('update nodePackage', keyword);
+  Scheduler.findOne({type: 'package', keyword: keyword}, function (err, scheduler) {
+    var hasCb = cb && 'function' === typeof cb;
+    if (!scheduler) {
+      if (hasCb) {
+        cb(null, false);
+      }
+      return void 0;
+    }
+    if (hasCb) {
+      cb(scheduler.run());
+    } else {
+      scheduler.run();
+    }
+  })
+});
 
 module.exports = Scheduler = mongoose.model('Scheduler', SchedulerSchema);

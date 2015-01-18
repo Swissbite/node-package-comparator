@@ -4,7 +4,7 @@
 
 'use strict';
 
-var Plugin = require('./package.model.js');
+var Plugin = require('./nodepackage.model.js');
 
 exports.register = function(socket) {
   Plugin.schema.post('save', function (doc) {

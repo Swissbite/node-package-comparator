@@ -20,7 +20,7 @@ function onConnect(socket) {
   // Insert sockets below
   require('../api/setting/setting.socket').register(socket);
   require('../api/scheduler/scheduler.socket').register(socket);
-  require('../api/package/package.socket').register(socket);
+  require('./package.socket').register(socket);
   require('../api/thing/thing.socket').register(socket);
 }
 

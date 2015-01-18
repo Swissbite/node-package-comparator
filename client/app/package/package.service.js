@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('NodePackageComperatorApp').
-  value('packageURLBase', '/api/packages')
-  .factory('Package', function (packageURLBase, $resource) {
+  value('packageURLBase', '/api/nodepackages')
+  .factory('NodePackage', function (packageURLBase, $resource) {
     return $resource(packageURLBase + '/:id', {id: '@_id'}, {
       byKeyword: {
         isArray: true,

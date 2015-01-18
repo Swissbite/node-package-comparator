@@ -1,9 +1,10 @@
 'use strict';
 
 angular.module('NodePackageComperatorApp')
-  .controller('ComparatorCtrl', function ($scope, $stateParams, $filter, Package) {
+  .controller('ComparatorCtrl', function ($scope, $stateParams, $filter, NodePackage) {
     var me = this;
-    var gridOptions = {
+
+    me.gridOptions = {
       enableFiltering: true,
       enableGridMenu: true,
       showGridFooter: true,
@@ -21,14 +22,14 @@ angular.module('NodePackageComperatorApp')
       ],
       data: 'comparator.comparableData'
     };
-    me.gridOptions = gridOptions;
+
     me.comparableData = [];
     function formatDate(date) {
       return $filter('date')(date, 'yy-MM-dd HH:mm');
     }
     function compare(keyword) {
       if (keyword && keyword.length > 0) {
-        Package.byKeyword({keyword: keyword}).$promise.then(function (packages) {
+        NodePackage.byKeyword({keyword: keyword}).$promise.then(function (packages) {
           _.forEach(packages, function (elem) {
             if (!elem.hasOwnProperty('githubForks')) {
               elem.githubForks = 0;
