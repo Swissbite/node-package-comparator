@@ -3,16 +3,16 @@
 describe('Service: comparator', function () {
 
   // load the service's module
-  beforeEach(module('npmpluginComperatorApp'));
+  beforeEach(module('NodePackageComperatorApp'));
 
   // instantiate service
-  var comparator;
-  beforeEach(inject(function (_comparator_) {
-    comparator = _comparator_;
+  var NodePackage;
+  beforeEach(inject(function (_NodePackage_) {
+    NodePackage = _NodePackage_;
   }));
 
   it('should do something', function () {
-    expect(!!comparator).toBe(true);
+    expect(!!NodePackage).toBe(true);
   });
 
 });
