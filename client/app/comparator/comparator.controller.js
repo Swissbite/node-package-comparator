@@ -1,32 +1,44 @@
 'use strict';
 
 angular.module('NodePackageComperatorApp')
-  .controller('ComparatorCtrl', function ($scope, $stateParams, $filter, NodePackage) {
+  .controller('ComparatorCtrl', function ($scope, $stateParams, $state, $filter, $log, NodePackage, uiGridConstants) {
     var me = this;
 
     me.gridOptions = {
       enableFiltering: true,
       enableGridMenu: true,
       showGridFooter: true,
-      showColumnFooter: true,
       columnDefs: [
-        {name: 'name'},
-        {name: 'description'},
-        {name: 'version'},
-        {name: 'lastModified', field: 'lastModifiedFormatted'},
-        {name: 'author'},
-        {name: 'npmStars'},
-        {name: 'githubForks'},
-        {name: 'githubStars'},
-        {name: 'githubWatches'}
-      ],
-      data: 'comparator.comparableData'
+        {name: 'name',
+          field: 'name',
+          cellTemplate: '<div><a ui-sref="package({id: row.entity._id})">{{row.entity.name}}</a></div>',
+          filter: {
+            condition: uiGridConstants.filter.CONTAINS
+          }
+        },
+        {name: 'description',
+          filter: {
+            condition: uiGridConstants.filter.CONTAINS
+          }
+        },
+        {name: 'author',
+          filter: {
+            condition: uiGridConstants.filter.CONTAINS
+          }},
+        {name: 'version',enableFiltering: false},
+        {name: 'lastModified', field: 'lastModifiedFormatted',enableFiltering: false, width: 120},
+        {name: 'npmStars',enableFiltering: false, width: 80, displayName: 'Stars @ NPM'},
+        {name: 'githubForks',enableFiltering: false, width: 80, displayName: 'Forks @ Github'},
+        {name: 'githubStars',enableFiltering: false,  width: 80, displayName: 'Stars @ Github'},
+        {name: 'githubWatches',enableFiltering: false, width: 80, displayName: 'Watches @ Github'}
+      ]
     };
 
     me.comparableData = [];
     function formatDate(date) {
       return $filter('date')(date, 'yy-MM-dd HH:mm');
     }
+
     function compare(keyword) {
       if (keyword && keyword.length > 0) {
         NodePackage.byKeyword({keyword: keyword}).$promise.then(function (packages) {
@@ -43,16 +55,16 @@ angular.module('NodePackageComperatorApp')
             elem.lastModifiedFormatted = formatDate(elem.lastModified);
 
           });
-          me.comparableData = packages;
+          me.gridOptions.data = packages;
+
         });
       }
     }
 
     me.compare = compare;
-    console.log($stateParams);
+    $log.log($stateParams);
     if ($stateParams.keyword) {
       $scope.searchTerm = $stateParams.keyword;
       compare($stateParams.keyword);
     }
-
   });
