@@ -5,7 +5,7 @@ angular.module('NodePackageComperatorApp')
     $stateProvider
       .state('package', {
         url: '/nodepackage/:id',
-        templateUrl: 'app/package/package.html',
+        templateUrl: 'app/nodepackage/package.html',
         controller: 'PackageCtrl'
       });
   });
