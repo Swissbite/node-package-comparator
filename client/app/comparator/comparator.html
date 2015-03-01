@@ -1,6 +1,7 @@
 <div class="container">
   <form class="thing-form">
-    <label>Search by keyword</label>
+    <label>Search by keyword
+      <img src="assets/images/ajax-loader.gif" alt="Loading image" ng-show="isLoading"/></label>
 
     <p class="input-group">
       <input type="text" class="form-control" placeholder="{{keywordPlaceholder}}" ng-model="searchTerm">

@@ -85,8 +85,9 @@ angular.module('NodePackageComperatorApp')
 
     function compare(keyword) {
       if (keyword && keyword.length > 0) {
+        $scope.isLoading = true;
         NodePackage.byKeyword({keyword: keyword}).$promise.then(function (packages) {
-          _.forEach(packages, function (elem) {
+          angular.forEach(packages, function (elem) {
             if (!elem.hasOwnProperty('githubForks')) {
               elem.githubForks = 0;
             }
@@ -100,6 +101,7 @@ angular.module('NodePackageComperatorApp')
 
           });
           me.gridOptions.data = packages;
+          $scope.isLoading = false;
 
         });
       }
@@ -110,6 +112,24 @@ angular.module('NodePackageComperatorApp')
     if ($stateParams.keyword) {
       $scope.searchTerm = $stateParams.keyword;
       compare($stateParams.keyword);
+    } else {
+      $scope.isLoading = true;
+      NodePackage.query().$promise.then(function(packages) {
+        me.gridOptions.data = packages;
+        angular.forEach(packages, function (elem) {
+          if (!elem.hasOwnProperty('githubForks')) {
+            elem.githubForks = 0;
+          }
+          if (!elem.hasOwnProperty('githubStars')) {
+            elem.githubStars = 0;
+          }
+          if (!elem.hasOwnProperty('githubWatches')) {
+            elem.githubWatches = 0;
+          }
+          elem.lastModifiedFormatted = formatDate(elem.lastModified);
+        });
+        $scope.isLoading = false;
+      });
     }
     $scope.$watch('searchTerm', function(newVal) {
       if (!newVal || newVal.length === 0) {
