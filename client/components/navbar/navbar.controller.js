@@ -4,7 +4,10 @@ angular.module('NodePackageComperatorApp')
   .controller('NavbarCtrl', function ($scope, $location, Auth) {
     $scope.menu = [{
       'title': 'Home',
-      'link': '/'
+      'link': 'comparator'
+    }, {
+      'title': 'About',
+      'link': 'about'
     }];
 
     $scope.isCollapsed = true;
