@@ -1,8 +1,31 @@
 'use strict';
 
 angular.module('NodePackageComperatorApp')
-  .controller('ComparatorCtrl', function ($scope, $stateParams, $state, $filter, $log, NodePackage, uiGridConstants) {
+  .controller('ComparatorCtrl', function ($scope, $stateParams, $state, $filter, $log, $interval, NodePackage, uiGridConstants) {
     var me = this;
+
+    var placeholderTextes=['Enter a keyword', 'Try mongoosejs', 'or mongodb', 'You could search for grunt', 'Only one keyword at a time'];
+    var placeholderCounter = 0;
+    var interval;
+    function refreshPlaceholders() {
+      if (placeholderCounter >= placeholderTextes.length) {
+        placeholderCounter = 0;
+      }
+      $scope.keywordPlaceholder = placeholderTextes[placeholderCounter];
+      placeholderCounter += 1;
+    }
+
+    function startInterval() {
+      if (!interval) {
+        interval = $interval(refreshPlaceholders, 2000);
+      }
+    }
+    function stopInterval() {
+      if (interval) {
+        $interval.cancel(interval);
+        interval = undefined;
+      }
+    }
 
     me.gridOptions = {
       enableFiltering: true,
@@ -88,4 +111,14 @@ angular.module('NodePackageComperatorApp')
       $scope.searchTerm = $stateParams.keyword;
       compare($stateParams.keyword);
     }
+    $scope.$watch('searchTerm', function(newVal) {
+      if (!newVal || newVal.length === 0) {
+        if (!$scope.keywordPlaceholder) {
+          refreshPlaceholders();
+        }
+        startInterval();
+      } else {
+        stopInterval();
+      }
+    });
   });

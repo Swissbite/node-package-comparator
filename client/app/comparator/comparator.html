@@ -3,7 +3,7 @@
     <label>Search by keyword</label>
 
     <p class="input-group">
-      <input type="text" class="form-control" placeholder="Enter a keyword." ng-model="searchTerm">
+      <input type="text" class="form-control" placeholder="{{keywordPlaceholder}}" ng-model="searchTerm">
       <span class="input-group-btn">
         <input type="submit" class="btn btn-primary" ui-sref="{keyword: searchTerm}" href=""
                ui-sref-opts="{reload: true}" value="Compare">
