@@ -9,14 +9,16 @@ angular.module('NodePackageComperatorApp')
       enableGridMenu: true,
       showGridFooter: true,
       columnDefs: [
-        { name: 'name',
+        {
+          name: 'name',
           displayName: 'Name',
           cellTemplate: '<div><a ui-sref="package({id: row.entity._id})">{{row.entity.name}}</a></div>',
           filter: {
             condition: uiGridConstants.filter.CONTAINS
           }
         },
-        {name: 'description',
+        {
+          name: 'description',
           displayName: 'Description',
           filter: {
             condition: uiGridConstants.filter.CONTAINS
@@ -29,12 +31,27 @@ angular.module('NodePackageComperatorApp')
             condition: uiGridConstants.filter.CONTAINS
           }
         },
-        {name: 'version',enableFiltering: false, width: 120, displayName: 'Version'},
-        {name: 'lastModified', field: 'lastModifiedFormatted',enableFiltering: false, width: 120},
-        {name: 'npmStars',enableFiltering: false, width: 80, displayName: 'Stars @ NPM'},
-        {name: 'githubForks',enableFiltering: false, width: 80, displayName: 'Forks @ Github'},
-        {name: 'githubStars',enableFiltering: false,  width: 80, displayName: 'Stars @ Github'},
-        {name: 'githubWatches',enableFiltering: false, width: 80, displayName: 'Watches @ Github'}
+        {name: 'version', enableFiltering: false, width: 120, displayName: 'Version'},
+        {name: 'lastModified', field: 'lastModifiedFormatted', enableFiltering: false, width: 120},
+        {
+          name: 'npmStars', enableFiltering: false, width: 80, displayName: 'Stars @ NPM', sort: {
+          direction: uiGridConstants.DESC,
+          priority: 2
+        }
+        },
+        {
+          name: 'githubForks', enableFiltering: false, width: 80, displayName: 'Forks @ Github', sort: {
+          direction: uiGridConstants.DESC,
+          priority: 1
+        }
+        },
+        {
+          name: 'githubStars', enableFiltering: false, width: 80, displayName: 'Stars @ Github', sort: {
+          direction: uiGridConstants.DESC,
+          priority: 0
+        }
+        },
+        {name: 'githubWatches', enableFiltering: false, width: 80, displayName: 'Watches @ Github'}
       ]
     };
 
