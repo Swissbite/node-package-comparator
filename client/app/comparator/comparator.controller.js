@@ -4,7 +4,7 @@ angular.module('NodePackageComperatorApp')
   .controller('ComparatorCtrl', function ($scope, $stateParams, $state, $filter, $log, $interval, NodePackage, uiGridConstants) {
     var me = this;
 
-    var placeholderTextes=['Enter a keyword', 'Try mongoose', 'or mongodb', 'You could search for grunt', 'Only one keyword at a time'];
+    var placeholderTextes=['Enter a keyword', 'Try mongoose', 'Packages for mongodb?', 'You could search for grunt', 'Only one keyword at a time'];
     var placeholderCounter = 0;
     var interval;
     function refreshPlaceholders() {
