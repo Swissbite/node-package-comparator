@@ -9,23 +9,27 @@ angular.module('NodePackageComperatorApp')
       enableGridMenu: true,
       showGridFooter: true,
       columnDefs: [
-        {name: 'name',
-          field: 'name',
+        { name: 'name',
+          displayName: 'Name',
           cellTemplate: '<div><a ui-sref="package({id: row.entity._id})">{{row.entity.name}}</a></div>',
           filter: {
             condition: uiGridConstants.filter.CONTAINS
           }
         },
         {name: 'description',
+          displayName: 'Description',
           filter: {
             condition: uiGridConstants.filter.CONTAINS
           }
         },
-        {name: 'author',
+        {
+          name: 'author',
+          displayName: 'Author',
           filter: {
             condition: uiGridConstants.filter.CONTAINS
-          }},
-        {name: 'version',enableFiltering: false},
+          }
+        },
+        {name: 'version',enableFiltering: false, width: 120, displayName: 'Version'},
         {name: 'lastModified', field: 'lastModifiedFormatted',enableFiltering: false, width: 120},
         {name: 'npmStars',enableFiltering: false, width: 80, displayName: 'Stars @ NPM'},
         {name: 'githubForks',enableFiltering: false, width: 80, displayName: 'Forks @ Github'},
