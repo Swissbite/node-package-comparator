@@ -129,6 +129,8 @@ angular.module('NodePackageComperatorApp')
           elem.lastModifiedFormatted = formatDate(elem.lastModified);
         });
         $scope.isLoading = false;
+      }, function() {
+        $scope.isLoading = false;
       });
     }
     $scope.$watch('searchTerm', function(newVal) {
