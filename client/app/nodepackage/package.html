@@ -5,31 +5,43 @@
 </header>
 <div class="container">
   <div class="row">
-    <div class="col-lg-4">
-      <dl>
-        <dt>Description</dt>
-        <dd>{{package.description}}</dd>
-        <dt>Version</dt>
-        <dd>{{package.version}}</dd>
-        <dt ng-show="package.readme">Readme</dt>
-        <dd ng-show="package.readme">{{package.readme}}</dd>
-        <dt>Author</dt>
-        <dd>{{package.author}}</dd>
-        <dt>Link to NPM</dt>
-        <dd><a ng-href="//npmjs.org/{{package.name}}">{{package.name}}</a></dd>
-      </dl>
-    </div>
-    <div class="col-lg-4">
-      <dl>
-        <dt>Stars on NPM</dt>
-        <dd>{{package.npmStars}}</dd>
-        <dt ng-show="package.githubStars">Stars on Github</dt>
-        <dd ng-show="package.githubStars">{{package.githubStars}}</dd>
-        <dt ng-show="package.githubForks">Forks on Github</dt>
-        <dd ng-show="package.githubForks">{{package.githubForks}}</dd>
-        <dt ng-show="package.githubWatches">Watches on Github</dt>
-        <dd ng-show="package.githubWatches">{{package.githubWatches}}</dd>
-      </dl>
+    <div class="col-lg-8">
+      <div class="row">
+        <div class="col-lg-6">
+          <dl>
+            <dt>Description</dt>
+            <dd>{{package.description}}</dd>
+            <dt>Version</dt>
+            <dd>{{package.version}}</dd>
+            <dt ng-show="package.readme">Readme</dt>
+            <dd ng-show="package.readme">{{package.readme}}</dd>
+            <dt>Author</dt>
+            <dd>{{package.author}}</dd>
+            <dt>Link to NPM</dt>
+            <dd><a ng-href="//npmjs.org/{{package.name}}">{{package.name}}</a></dd>
+          </dl>
+        </div>
+        <div class="col-lg-6">
+          <dl>
+            <dt>Stars on NPM</dt>
+            <dd>{{package.npmStars}}</dd>
+            <dt ng-show="package.githubStars">Stars on Github</dt>
+            <dd ng-show="package.githubStars">{{package.githubStars}}</dd>
+            <dt ng-show="package.githubForks">Forks on Github</dt>
+            <dd ng-show="package.githubForks">{{package.githubForks}}</dd>
+            <dt ng-show="package.githubWatches">Watches on Github</dt>
+            <dd ng-show="package.githubWatches">{{package.githubWatches}}</dd>
+          </dl>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <dl>
+            <dt>Last package update from npm/github</dt>
+            <dd>{{package._lastUpdate | date}}</dd>
+          </dl>
+        </div>
+      </div>
     </div>
     <div class="col-lg-4">
       <dl>
@@ -38,12 +50,5 @@
       </dl>
     </div>
   </div>
-  <div class="row">
-    <div class="col-lg-12">
-      <dl>
-        <dt>Last package update from npm/github</dt>
-        <dd>{{package._lastUpdate | date}}</dd>
-      </dl>
-    </div>
-  </div>
+
 </div>
