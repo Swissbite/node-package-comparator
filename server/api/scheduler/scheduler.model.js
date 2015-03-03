@@ -67,7 +67,8 @@ function responseHandler(response, callback) {
     try {
       data = JSON.parse(data);
       callback(null, data);
-    } catch (err) {
+    }
+    catch (err) {
       callback(err);
     }
   });
@@ -91,7 +92,7 @@ function getRequestClientLib(baseUrl) {
  * @returns {boolean} true if not active and lastRun is older than one day.
  */
 function checkIfAllowedToRun(instance) {
-  return !instance.active && (!instance.lastRun || moment().subtract(1, 'day').isAfter(instance.lastRun));
+  return (!instance.active && (!instance.lastRun || moment().subtract(1, 'day').isAfter(instance.lastRun))) || moment().subtract(2, 'day').isAfter(instance.lastRun);
 }
 
 /**
@@ -220,7 +221,8 @@ function refreshKeywordsScheduler(instance) {
 
               if (schedulerKeywords.length > 1000) {
                 splitCreate(schedulerKeywords, cb);
-              } else {
+              }
+              else {
                 Scheduler.create(schedulerKeywords, cb);
               }
             });
@@ -308,7 +310,9 @@ function refreshPackageScheduler(instance) {
                     return void 0;
                   }
                   console.log(githubEnv.createRepoPath(packageData.github.account, packageData.github.project));
-                  https.get(_.merge({path: githubEnv.createRepoPath(packageData.github.account, packageData.github.project)}, githubEnv.httpsBase), function (res) {
+                  https.get(_.merge({
+                    path: githubEnv.createRepoPath(packageData.github.account, packageData.github.project)
+                  }, githubEnv.httpsBase), function (res) {
                     responseHandler(res, function (err, data) {
                       if (err) {
                         console.log(err);
@@ -343,14 +347,15 @@ function refreshPackageScheduler(instance) {
                   _.merge(packageData, results.githubMetrics);
                 }
                 packageData._lastUpdate = Date.now();
-                NodePackage.findOneAndUpdate({name: packageData.name}, packageData, {upsert: true}, function (err, doc) {
-                  if (err) {
-                    console.log(err);
-                    cb(err);
-                    return void 0;
-                  }
-                  cb(err, doc);
-                });
+                NodePackage.findOneAndUpdate({name: packageData.name}, packageData, {upsert: true},
+                  function (err, doc) {
+                    if (err) {
+                      console.log(err);
+                      cb(err);
+                      return void 0;
+                    }
+                    cb(err, doc);
+                  });
               });
             });
           };
@@ -390,7 +395,8 @@ SchedulerSchema.methods.run = function run() {
   var me = this;
   if (me.type === 'keywords') {
     return refreshKeywordsScheduler(me);
-  } else if (me.type === 'package') {
+  }
+  else if (me.type === 'package') {
     return refreshPackageScheduler(me);
   }
   return false;
@@ -403,7 +409,8 @@ SchedulerSchema.static('updateKeywords', function (cb) {
     }
     if (cb && 'function' === typeof cb) {
       cb(scheduler.run());
-    } else {
+    }
+    else {
       scheduler.run();
     }
   })
@@ -421,7 +428,8 @@ SchedulerSchema.static('updatePackages', function (keyword, cb) {
     }
     if (hasCb) {
       cb(scheduler.run());
-    } else {
+    }
+    else {
       scheduler.run();
     }
   })
