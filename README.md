@@ -11,7 +11,7 @@ compare different packages with the same keyword.
 Contribution is welcome.
 
 # Live version
-The service can be found under [npcjs.io](https://npcjs.io).
+The service can be found under [www.npcjs.io](http://www.npcjs.io).
 
 ## What could a user do
 Just search by keyword exact one keyword and sort. If the data is older than 24h, it will be updated. Maybe a second search might be necessary.
