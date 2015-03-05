@@ -12,6 +12,9 @@
         </input>
       </span>
     </p>
+    <p class="text-warning" ng-show="!isLoading && comparator.gridOptions.data.length == 0">
+      No data found to this keyword. If it is the first load on this keyword, you may tray again.
+    </p>
   </form>
   <div id="grid1" ui-grid="comparator.gridOptions" class="grid"></div>
   <div ui-view></div>

@@ -83,6 +83,12 @@ angular.module('NodePackageComperatorApp')
       return $filter('date')(date, 'yy-MM-dd HH:mm');
     }
 
+    function errorFnOnRequest() {
+      console.log(arguments);
+      $scope.isLoading = false;
+      me.gridOptions.data = [];
+    }
+
     function compare(keyword) {
       if (keyword && keyword.length > 0) {
         $scope.isLoading = true;
@@ -103,7 +109,7 @@ angular.module('NodePackageComperatorApp')
           me.gridOptions.data = packages;
           $scope.isLoading = false;
 
-        });
+        }, errorFnOnRequest);
       }
     }
 
@@ -129,9 +135,7 @@ angular.module('NodePackageComperatorApp')
           elem.lastModifiedFormatted = formatDate(elem.lastModified);
         });
         $scope.isLoading = false;
-      }, function() {
-        $scope.isLoading = false;
-      });
+      }, errorFnOnRequest);
     }
     $scope.$watch('searchTerm', function(newVal) {
       if (!newVal || newVal.length === 0) {
