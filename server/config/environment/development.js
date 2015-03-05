@@ -8,9 +8,8 @@ module.exports = {
   mongo: {
     uri: 'mongodb://localhost/nodepackagecomparator-dev'
   },
-  registry: {
-    uri: 'http://localhost:5984/registry/_design/app/_rewrite/'
-
-  },
+//  registry: {
+//    uri: 'http://localhost:5984/registry/_design/app/_rewrite/'
+//  },
   seedDB: true
 };
