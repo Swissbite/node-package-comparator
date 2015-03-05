@@ -2,11 +2,14 @@
 
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
+var Mixed = mongoose.Schema.Types.Mixed;
 
 var SettingSchema = new Schema({
-  name: String,
+  name: {type: String, unique: true},
   info: String,
-  active: Boolean
+  value: Mixed,
+  active: Boolean,
+  editable: Boolean
 });
 
 module.exports = mongoose.model('Setting', SettingSchema);
