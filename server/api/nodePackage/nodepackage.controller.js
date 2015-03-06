@@ -44,8 +44,8 @@ exports.byName = function (req, res) {
 exports.byKeyword = function (req, res) {
   var keyword = req.params.keyword;
   Scheduler.updateKeywords();
-  Scheduler.updatePackages(keyword);
-  NodePackage.find({keywords: {$elemMatch: {$regex: new RegExp('^' + keyword + '$', 'i')}}}, function (err, plugins) {
+  Scheduler.updatePackages(keyword.toLowerCase());
+  NodePackage.find({keywords: keyword.toLowerCase()}, function (err, plugins) {
     if (err) {
       return handleError(res, err);
     }

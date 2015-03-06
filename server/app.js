@@ -14,6 +14,8 @@ var config = require('./config/environment');
 // Connect to database
 mongoose.connect(config.mongo.uri, config.mongo.options);
 
+require('./config/upgrade')();
+
 // Populate DB with sample data
 if(config.seedDB) { require('./config/seed'); }
 

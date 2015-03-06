@@ -14,7 +14,7 @@ var NodePackageSchema = new Schema({
     account: String,
     project: String
   },
-  keywords: {type: [String], index: true},
+  keywords: {type: [{type: String, lowercase: true}], index: true},
   npmStars: Number,
   githubForks: {type: Number, index: true},
   githubStars: {type: Number, index: true},

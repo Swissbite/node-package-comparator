@@ -8,7 +8,6 @@ var SettingSchema = new Schema({
   name: {type: String, unique: true},
   info: String,
   value: Mixed,
-  active: Boolean,
   editable: Boolean
 });
 
