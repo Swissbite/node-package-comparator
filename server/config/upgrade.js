@@ -4,6 +4,7 @@
 
 var Setting = require('../api/setting/setting.model');
 var nodePackage = require('../api/nodePackage/nodepackage.model');
+var Scheduler = require('../api/scheduler/scheduler.model');
 var _ = require('lodash');
 var async = require('async');
 var upgradeFunctions = [];
@@ -39,6 +40,19 @@ upgradeFunctions.push(function lowercaseKeywords(cb) {
       cb(err);
     })
   });
+});
+
+upgradeFunctions.push(function clearAllExecSchedulers(cb) {
+  Scheduler.update({type: 'package'}, {
+    $unset: {
+      active: '',
+      lastRun: '',
+      lastFinish: ''
+    }
+  }, {multi: true, strict: false}, cb);
+});
+upgradeFunctions.push(function clearAllPackageUpdateDates(cb) {
+  nodePackage.update({}, {$unset: {_lastUpdate: ''}}, {multi: true, strict: false}, cb);
 });
 
 

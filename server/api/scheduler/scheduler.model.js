@@ -268,9 +268,9 @@ function refreshPackageScheduler(instance) {
                 cb(err);
                 return void 0;
               }
-              githubData = checkUrlForGithubInfos(npmInfo.homepage);
+              githubData = checkUrlForGithubInfos(npmInfo.repository ? npmInfo.repository.url : null);
               if (!githubData && npmInfo.repository && npmInfo.repository.type === 'git' && npmInfo.repository.url) {
-                githubData = checkUrlForGithubInfos(npmInfo.repository.url);
+                githubData = checkUrlForGithubInfos(npmInfo.homepage);
               }
               packageData = {
                 name: npmInfo.name,
@@ -327,7 +327,7 @@ function refreshPackageScheduler(instance) {
                       cb(null, {
                         githubForks: data.forks_count || 0,
                         githubStars: data.stargazers_count || 0,
-                        githubWatches: data.watchers_count || 0
+                        githubWatches: data.subscribers_count || 0
                       });
                     });
                   }).on('error', function (e) {
