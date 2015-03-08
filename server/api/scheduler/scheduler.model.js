@@ -269,7 +269,7 @@ function refreshPackageScheduler(instance) {
                 return void 0;
               }
               githubData = checkUrlForGithubInfos(npmInfo.repository ? npmInfo.repository.url : null);
-              if (!githubData && npmInfo.repository && npmInfo.repository.type === 'git' && npmInfo.repository.url) {
+              if (!githubData && npmInfo.homepage) {
                 githubData = checkUrlForGithubInfos(npmInfo.homepage);
               }
               packageData = {

@@ -55,6 +55,19 @@ upgradeFunctions.push(function clearAllPackageUpdateDates(cb) {
   nodePackage.update({}, {$unset: {_lastUpdate: ''}}, {multi: true, strict: false}, cb);
 });
 
+upgradeFunctions.push(function removeAllPackagesAndSchedulers(cb) {
+  async.parallel({
+    nodePackages: function (cb) {
+      nodePackage.remove({}, cb);
+    },
+    schedulers: function (cb) {
+      Scheduler.remove({}, cb);
+    }
+  }, function (err) {
+    cb(err);
+  });
+});
+
 
 function upgrade(cb) {
   console.log('Start upgrade');
