@@ -35,5 +35,8 @@ Just search by keyword exact one keyword and sort. If the data is older than 24h
   - disabled/enabled columns
   - sorting order (default or per search)
 
+# Installation
+Look at [install](install.html).
+
 # License
 Node Package Comparator is licensed under [GNU Affero GPL 3.0](http://www.gnu.org/licenses/agpl).
