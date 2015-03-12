@@ -34,6 +34,7 @@ var mongoose = require('mongoose'),
 var SchedulerSchema = new Schema({
   type: {type: String, enum: ['keywords', 'package'], required: true, index: true},
   keyword: {type: String, index: {unique: true, sparse: true}},
+  amount: Number,
   active: Boolean,
   lastRun: Date,
   lastFinish: Date
@@ -182,9 +183,11 @@ function refreshKeywordsScheduler(instance) {
         group_level: 1
       }, function updateAllPackageSchedulers(err, data) {
         var keywords = [];
+        var amountMap = {};
         _.forEach(data.rows, function selectKeyword(elem) {
           if (elem.key.length > 0) {
             keywords.push(elem.key[0]);
+            amountMap[elem.key[0]] = elem.value;
           }
         });
 
@@ -193,13 +196,13 @@ function refreshKeywordsScheduler(instance) {
             Scheduler.remove({keyword: {$nin: keywords}, type: 'package'}, cb);
           },
           function (cb) {
-            Scheduler.find({type: 'package'}, 'keyword', function (err, keywordSchedulers) {
-              var schedulerKeywords = [], toCreateKeywords;
+            Scheduler.find({type: 'package', keyword: {$in: keywords}}, 'keyword', function (err, keywordSchedulers) {
+              var schedulerKeywords = [], toCreateKeywords, toUpdateKeywordsFnList = [], keywordIdMap = {};
 
               function splitCreate(schedulerKeywordDocs, cb) {
-                var i = 0, maxEach = 10000, total = schedulerKeywords.length, splicedSchedulerDocs = [], functionList = [];
+                var i = 0, maxEach = 10000, total = schedulerKeywordDocs.length, splicedSchedulerDocs = [], functionList = [];
                 for (i; i < total; i += maxEach) {
-                  splicedSchedulerDocs[i / maxEach] = schedulerKeywordDocs.slice(i, i + maxEach);
+                  splicedSchedulerDocs.push(schedulerKeywordDocs.slice(i, i + maxEach));
                 }
                 _.forEach(splicedSchedulerDocs, function (splicedDocs) {
                   functionList.push(function createDocs(cb) {
@@ -209,22 +212,56 @@ function refreshKeywordsScheduler(instance) {
                 async.parallel(functionList, cb);
               }
 
+              function findSchedulerByIdAndUpdateFnCreator(id, update) {
+                return function findSchedulerByIdAndUpdateFn(cb) {
+                  Scheduler.findByIdAndUpdate(id, update, cb)
+                };
+              }
+
+
               _.forEach(keywordSchedulers, function (extractKeywords) {
                 schedulerKeywords.push(extractKeywords.keyword);
+                keywordIdMap[extractKeywords.keyword] = extractKeywords._id;
               });
 
               toCreateKeywords = _.difference(keywords, schedulerKeywords);
-              schedulerKeywords = [];
-              _.forEach(toCreateKeywords, function createDoc(keyword) {
-                schedulerKeywords.push({type: 'package', keyword: keyword});
+
+              _.forEach(keywords, function (keyword) {
+                if (amountMap.hasOwnProperty(keyword)) {
+                  toUpdateKeywordsFnList.push(findSchedulerByIdAndUpdateFnCreator(keywordIdMap[keyword],
+                    {amount: amountMap[keyword]}));
+                }
               });
 
-              if (schedulerKeywords.length > 1000) {
-                splitCreate(schedulerKeywords, cb);
-              }
-              else {
-                Scheduler.create(schedulerKeywords, cb);
-              }
+              schedulerKeywords = [];
+              _.forEach(toCreateKeywords, function createDoc(keyword) {
+                schedulerKeywords.push({type: 'package', keyword: keyword, amount: amountMap[keyword]});
+              });
+
+              async.parallel({
+                create: function (cb) {
+                  if (schedulerKeywords.length > 1000) {
+                    splitCreate(schedulerKeywords, cb);
+                  }
+                  else {
+                    Scheduler.create(schedulerKeywords, cb);
+                  }
+                },
+                update: function (cb) {
+                  if (toUpdateKeywordsFnList.length > 0) {
+                    async.parallel(toUpdateKeywordsFnList, cb);
+                  }
+                  else {
+                    cb();
+                  }
+                }
+
+              }, function (err) {
+                cb(err);
+              });
+
+
+
             });
           }
         ], function finish() {
