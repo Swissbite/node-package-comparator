@@ -34,7 +34,7 @@ var mongoose = require('mongoose'),
 var SchedulerSchema = new Schema({
   type: {type: String, enum: ['keywords', 'package'], required: true, index: true},
   keyword: {type: String, index: {unique: true, sparse: true}},
-  amount: Number,
+  amount: {type: Number, index: true},
   active: Boolean,
   lastRun: Date,
   lastFinish: Date

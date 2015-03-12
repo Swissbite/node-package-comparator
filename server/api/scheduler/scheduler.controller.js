@@ -93,13 +93,24 @@ exports.destroy = function (req, res) {
 };
 
 exports.keywords = function (req, res) {
-  Scheduler.updateKeywords();
-  Scheduler.find({type: 'package'}, 'keyword', function(err, schedulers) {
+  var queryParam = req.query;
+  var qry = Scheduler.find({type: 'package'}, 'keyword amount');
+  if (queryParam.sort) {
+    qry.sort(req.query.sort);
+  }
+  if (queryParam.limit) {
+    qry.limit(queryParam.limit);
+  }
+  if (queryParam.skip) {
+    qry.skip(queryParam.skip);
+  }
+  qry.exec(function(err, schedulers) {
     if (err) {
       return handleError(res, err);
     }
     res.json(200, schedulers);
   });
+  Scheduler.updateKeywords();
 };
 
 function handleError(res, err) {

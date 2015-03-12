@@ -43,8 +43,6 @@ exports.byName = function (req, res) {
 
 exports.byKeyword = function (req, res) {
   var keyword = req.params.keyword;
-  Scheduler.updateKeywords();
-  Scheduler.updatePackages(keyword.toLowerCase());
   NodePackage.find({keywords: keyword.toLowerCase()}, function (err, plugins) {
     if (err) {
       return handleError(res, err);
@@ -54,6 +52,8 @@ exports.byKeyword = function (req, res) {
     }
     return res.json(plugins);
   });
+  Scheduler.updateKeywords();
+  Scheduler.updatePackages(keyword.toLowerCase());
 };
 
 function handleError(res, err) {
