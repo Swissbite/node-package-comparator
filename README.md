@@ -25,3 +25,7 @@ Currently, I see no benefit for a user to have an account.
 
 ## License
 Node Package Comparator is licensed under [GNU Affero GPL 3.0](http://www.gnu.org/licenses/agpl).
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Swissbite/node-package-comparator/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
