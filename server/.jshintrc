@@ -1,4 +1,7 @@
 {
+  "globals": {
+    "emit": true
+  },
   "node": true,
   "esnext": true,
   "bitwise": true,
