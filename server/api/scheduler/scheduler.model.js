@@ -137,6 +137,11 @@ function getRegistryData(url, queryParams, callback) {
 
   clientLib.get(url + queryParamsAsString, function (res) {
     responseHandler(res, callback);
+  }).on('error', function(e) {
+    console.error(e);
+    if (callback && 'function' === typeof callback) {
+      callback(e);
+    }
   });
 }
 
@@ -288,7 +293,7 @@ function refreshPackageScheduler(instance) {
         endkey: [scheduler.keyword, {}, {}]
       }, function (err, data) {
         console.log(err);
-        var asyncUpdateCalls = [], asyncDBSearchCalls = [];
+        var asyncUpdateCalls = [], asyncDBSearchCalls = [], asyncDBSearchCallsSplited = [];
 
         /**
          * Creates a callback function for asking the registry and githup.
@@ -397,7 +402,7 @@ function refreshPackageScheduler(instance) {
             });
           };
         }
-
+        function noop() {}
         function checkIfPackageShouldBeUpatedAndAddToAsyncCalls(name) {
           return function asyncCbFn(cb) {
             NodePackage.findOne({name: name}, function (err, pkg) {
@@ -406,9 +411,10 @@ function refreshPackageScheduler(instance) {
                 return void 0;
               }
               if (!pkg || moment().subtract(1, 'day').isAfter(pkg._lastUpdate)) {
-                asyncUpdateCalls.push(createCall(name));
+                cb(null, createCall(name));
+              } else {
+                cb (null, noop());
               }
-              cb();
             });
           };
         }
@@ -416,10 +422,12 @@ function refreshPackageScheduler(instance) {
         _.forEach(data.rows, function (obj) {
           asyncDBSearchCalls.push(checkIfPackageShouldBeUpatedAndAddToAsyncCalls(obj.key[1]));
         });
-        async.parallel(asyncDBSearchCalls, function () {
-          async.parallel(asyncUpdateCalls, function () {
-            setDoneAndLastFinsh(scheduler, function () {/*noop*/
-            });
+
+
+
+        async.parallelLimit(asyncDBSearchCalls, 500, function (err, calls) {
+          async.parallelLimit(calls, 500, function () {
+            setDoneAndLastFinsh(scheduler, noop);
           });
         });
       });
