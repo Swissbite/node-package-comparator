@@ -36,8 +36,8 @@ var SchedulerSchema = new Schema({
   keyword: {type: String, index: {unique: true, sparse: true}},
   amount: {type: Number, index: true},
   active: Boolean,
-  lastRun: Date,
-  lastFinish: Date
+  lastRun: {type: Date, index: {unique: true, sparse: true}},
+  lastFinish: {type: Date, index: {unique: true, sparse: true}}
 });
 
 /**
