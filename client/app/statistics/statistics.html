@@ -1,0 +1,28 @@
+<div class="container">
+    <h1>Statistics</h1>
+    <ul class="list-unstyled">
+        <li>Number of current known packeges: {{stats.countOfKeywords}} <span
+                class="glyphicon glyphicon-question-sign text-info" tooltip-placement="right"
+                tooltip="Missing keywords? Go and search for them.">&nbsp;</span></li>
+    </ul>
+    <h2>Distribution</h2>
+    <highchart id="chart1" config="highchart"></highchart>
+    <div class="row">
+        <div class="col-xs-12 col-sm-6">
+            <h2>10 most listed keyword</h2>
+            <ul class="list-unstyled">
+                <li ng-repeat="item in stats.top10">
+                    {{item._id}} : {{item.value}}
+                </li>
+            </ul>
+        </div>
+        <div class="col-xs-12 col-sm-6">
+            <h2>10 fewest listed keywords</h2>
+            <ul class="list-unstyled">
+                <li ng-repeat="item in stats.low10">
+                    {{item._id}} : {{item.value}}
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

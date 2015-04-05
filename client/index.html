@@ -11,6 +11,8 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="bower_components/angular-ui-grid/ui-grid.css" />
+    <script src="//code.highcharts.com/adapters/standalone-framework.js"></script>
+    <script src="//code.highcharts.com/highcharts.src.js"></script>
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(client) app/vendor.css -->
       <!-- bower:css -->
@@ -67,7 +69,9 @@
       <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
       <script src="bower_components/angular-ui-grid/ui-grid.js"></script>
       <script src="bower_components/angular-animate/angular-animate.js"></script>
-      <!-- endbower -->
+    <script src="bower_components/highcharts-ng/dist/highcharts-ng.js"></script>
+
+    <!-- endbower -->
       <script src="socket.io-client/socket.io.js"></script>
     <!-- endbuild -->
 
@@ -86,6 +90,9 @@
           <script src="app/nodepackage/package.controller.js"></script>
           <script src="app/nodepackage/package.js"></script>
           <script src="app/nodepackage/package.service.js"></script>
+    <script src="app/statistics/statistics.controller.js"></script>
+    <script src="app/statistics/statistics.js"></script>
+    <script src="app/statistics/statistics.service.js"></script>
           <script src="components/auth/auth.service.js"></script>
           <script src="components/auth/user.service.js"></script>
           <script src="components/modal/modal.service.js"></script>

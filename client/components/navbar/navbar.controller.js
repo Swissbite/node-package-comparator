@@ -8,6 +8,9 @@ angular.module('NodePackageComperatorApp')
     }, {
       'title': 'About',
       'link': 'about'
+    }, {
+      'title': 'Statistics',
+      'link': 'statistics'
     }];
 
     $scope.isCollapsed = true;

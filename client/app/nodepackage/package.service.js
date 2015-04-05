@@ -15,6 +15,11 @@ angular.module('NodePackageComperatorApp').
         url: packageURLBase + '/byName/:name',
         params: {name: '@name'},
         method: 'GET'
+      },
+      statistics: {
+        isArray: false,
+        params: {id: 'statistics'},
+        method: 'GET'
       }
     });
   });

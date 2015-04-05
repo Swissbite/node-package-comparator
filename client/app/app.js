@@ -9,7 +9,8 @@ angular.module('NodePackageComperatorApp', [
   'ui.router',
   'ui.bootstrap',
   'ui.grid',
-  'ui.grid.selection'
+  'ui.grid.selection',
+  'highcharts-ng'
 ])
   .config(function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
     $urlRouterProvider
