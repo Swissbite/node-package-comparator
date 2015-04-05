@@ -32,10 +32,12 @@ angular.module('NodePackageComperatorApp')
           }
         }
       },
-      series: [statisticSerie]
+      series: [statisticSerie],
+      loading: true
     };
     NodePackage.statistics().$promise.then(function (statistics) {
       $scope.stats = statistics;
+      $scope.highchart.loading = false;
       statisticSerie.data = [['In less than 10', statistics.countOfKeywordsLower10],
         ['Between 10 and 100', statistics.countOfKeywordsBetween10And100],
         ['Between 500 and 1000', statistics.countOfKeywordsBetween500And1000],
