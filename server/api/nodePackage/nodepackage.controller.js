@@ -80,11 +80,11 @@ exports.statistics = function (req, res) {
         countOfKeywords: function (cb) {
           model.count(cb);
         },
-        top10: function (cb) {
-          model.find().sort({value: -1, _id: 1}).limit(10).exec(cb);
+        top25: function (cb) {
+          model.find().sort({value: -1, _id: 1}).limit(25).exec(cb);
         },
-        low10: function (cb) {
-          model.find().sort({value: 1, _id: 1}).limit(10).exec(cb);
+        low25: function (cb) {
+          model.find().sort({value: 1, _id: 1}).limit(25).exec(cb);
         }, countOfKeywordsLower10: function (cb) {
           model.count({value: {$lt: 10}}, cb);
         }, countOfKeywordsBetween10And100: function (cb) {

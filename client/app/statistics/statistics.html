@@ -9,18 +9,20 @@
     <highchart id="chart1" config="highchart"></highchart>
     <div class="row">
         <div class="col-xs-12 col-sm-6">
-            <h2>10 most listed keyword</h2>
+            <h2>25 most listed keyword</h2>
             <ul class="list-unstyled">
-                <li ng-repeat="item in stats.top10">
-                    <code ng-bind-html="item._id | spaceToNbsp"></code>: {{item.value}}
+                <li ng-repeat="item in stats.top25">
+                    <a ui-sref="comparator({keyword: item._id})"><code ng-bind-html="item._id | spaceToNbsp"></code></a>:
+                    {{item.value}}
                 </li>
             </ul>
         </div>
         <div class="col-xs-12 col-sm-6">
-            <h2>10 fewest listed keywords</h2>
+            <h2>25 fewest listed keywords</h2>
             <ul class="list-unstyled">
-                <li ng-repeat="item in stats.low10">
-                    <code ng-bind-html="item._id | spaceToNbsp"></code>: {{item.value}}
+                <li ng-repeat="item in stats.low25">
+                    <a ui-sref="comparator({keyword: item._id})"><code ng-bind-html="item._id | spaceToNbsp"></code></a>:
+                    {{item.value}}
                 </li>
             </ul>
         </div>
