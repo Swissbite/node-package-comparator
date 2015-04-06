@@ -10,21 +10,41 @@
     <div class="row">
         <div class="col-xs-12 col-sm-6">
             <h2>25 most listed keyword</h2>
-            <ul class="list-unstyled">
-                <li ng-repeat="item in stats.top25">
-                    <a ui-sref="comparator({keyword: item._id})"><code ng-bind-html="item._id | spaceToNbsp"></code></a>:
-                    {{item.value}}
-                </li>
-            </ul>
+            <table class="table table-condensed">
+                <thead>
+                <tr>
+                    <th>Keyword</th>
+                    <th>Found in # packages</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="item in stats.top25">
+                    <td><a ui-sref="comparator({keyword: item._id})"><code ng-bind-html="item._id | spaceToNbsp"></code></a>
+                    </td>
+                    <td>{{item.value}}</td>
+                </tr>
+                </tbody>
+            </table>
+
         </div>
         <div class="col-xs-12 col-sm-6">
             <h2>25 fewest listed keywords</h2>
-            <ul class="list-unstyled">
-                <li ng-repeat="item in stats.low25">
-                    <a ui-sref="comparator({keyword: item._id})"><code ng-bind-html="item._id | spaceToNbsp"></code></a>:
-                    {{item.value}}
-                </li>
-            </ul>
+
+            <table class="table table-condensed">
+                <thead>
+                <tr>
+                    <th>Keyword</th>
+                    <th>Found in # packages</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="item in stats.low25">
+                    <td><a ui-sref="comparator({keyword: item._id})"><code ng-bind-html="item._id | spaceToNbsp"></code></a>
+                    </td>
+                    <td>{{item.value}}</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
