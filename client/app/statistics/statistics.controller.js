@@ -37,6 +37,7 @@ angular.module('NodePackageComperatorApp')
     };
     NodePackage.statistics().$promise.then(function (statistics) {
       $scope.stats = statistics;
+
       $scope.highchart.loading = false;
       statisticSerie.data = [['In less than 10', statistics.countOfKeywordsLower10],
         ['Between 10 and 100', statistics.countOfKeywordsBetween10And100],

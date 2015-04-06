@@ -12,7 +12,7 @@
             <h2>10 most listed keyword</h2>
             <ul class="list-unstyled">
                 <li ng-repeat="item in stats.top10">
-                    {{item._id}} : {{item.value}}
+                    <code ng-bind-html="item._id | spaceToNbsp"></code>: {{item.value}}
                 </li>
             </ul>
         </div>
@@ -20,7 +20,7 @@
             <h2>10 fewest listed keywords</h2>
             <ul class="list-unstyled">
                 <li ng-repeat="item in stats.low10">
-                    {{item._id}} : {{item.value}}
+                    <code ng-bind-html="item._id | spaceToNbsp"></code>: {{item.value}}
                 </li>
             </ul>
         </div>
