@@ -65,7 +65,7 @@ exports.statistics = function (req, res) {
     map: function () {
       var i = 0, length = this.keywords.length, keywords = this.keywords;
       for (i; i < length; i++) {
-        emit(keywords[i], 1);
+        emit(keywords[i].toLowerCase(), 1);
       }
     },
     reduce: function (k, values) {
