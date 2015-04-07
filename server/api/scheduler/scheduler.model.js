@@ -121,7 +121,7 @@ function setDoneAndLastFinsh(instance, callback) {
 }
 
 /**
- *
+ * Fetches the registry data from npm and returns content to callback.
  * @param {String} url the url without query parameters. As example: https://registry.npmjs.org/-/_view/byKeyword
  * @param {Object} queryParams The query params. Each value will be stringified by @{JSON#stringify}
  * @param {function} callback
@@ -317,6 +317,7 @@ function refreshPackageScheduler(instance) {
               packageData = {
                 name: npmInfo.name,
                 description: npmInfo.description || null,
+                readme: npmInfo.readme || null,
                 version: npmInfo["dist-tags"].latest,
                 lastModified: (npmInfo.time && npmInfo.time.modified) ? npmInfo.time.modified : null,
                 author: (npmInfo.author && npmInfo.author.name) ? npmInfo.author.name : null,
