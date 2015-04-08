@@ -316,8 +316,9 @@ function refreshPackageScheduler(instance) {
               }
               packageData = {
                 name: npmInfo.name,
-                description: npmInfo.description || null,
+                description: npmInfo.description || ell,
                 readme: npmInfo.readme || null,
+                readmeFile: npmInfo.readmeFile || null,
                 version: npmInfo["dist-tags"].latest,
                 lastModified: (npmInfo.time && npmInfo.time.modified) ? npmInfo.time.modified : null,
                 author: (npmInfo.author && npmInfo.author.name) ? npmInfo.author.name : null,

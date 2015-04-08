@@ -8,6 +8,7 @@ var NodePackageSchema = new Schema({
   description: String,
   version: String,
   readme: String,
+  readmeFile: String,
   author: String,
   lastModified: {type: Date, index: true, spatial: true},
   github: {
