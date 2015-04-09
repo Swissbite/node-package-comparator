@@ -94,21 +94,36 @@ exports.destroy = function (req, res) {
 
 exports.keywords = function (req, res) {
   var queryParam = req.query;
+  var count = false;
   var qry = Scheduler.find({type: 'package'}, 'keyword amount');
-  if (queryParam.sort) {
-    qry.sort(req.query.sort);
+  if (queryParam.count) {
+    qry.count();
+    count = true;
   }
-  if (queryParam.limit) {
-    qry.limit(queryParam.limit);
-  }
-  if (queryParam.skip) {
-    qry.skip(queryParam.skip);
+  else {
+    if (queryParam.sort) {
+      qry.sort(req.query.sort);
+    }
+    else {
+      qry.sort('keyword');
+    }
+    if (queryParam.limit) {
+      qry.limit(queryParam.limit);
+    }
+    if (queryParam.skip) {
+      qry.skip(queryParam.skip);
+    }
   }
   qry.exec(function(err, schedulers) {
     if (err) {
       return handleError(res, err);
     }
-    res.json(200, schedulers);
+    if (count) {
+      res.json(200, {count: schedulers});
+    }
+    else {
+      res.json(200, schedulers);
+    }
   });
   Scheduler.updateKeywords();
 };
