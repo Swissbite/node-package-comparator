@@ -42,14 +42,6 @@ describe('User Model', function() {
     });
   });
 
-  it('should fail when saving without an email', function(done) {
-    user.email = '';
-    user.save(function(err) {
-      should.exist(err);
-      done();
-    });
-  });
-
   it("should authenticate user if password is valid", function() {
     return user.authenticate('password').should.be.true;
   });

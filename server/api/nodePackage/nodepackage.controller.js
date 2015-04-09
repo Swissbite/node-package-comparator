@@ -9,12 +9,12 @@ var Setting = require('../setting/setting.model');
 
 // Get list of plugins
 exports.index = function (req, res) {
-  NodePackage.find(function (err, plugins) {
+  NodePackage.find(function (err, nodePackages) {
     if (err) {
       return handleError(res, err);
     }
     res.status(200);
-    return res.json(plugins);
+    return res.json(nodePackages);
   });
 };
 
