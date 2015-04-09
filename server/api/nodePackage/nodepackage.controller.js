@@ -45,13 +45,37 @@ exports.byName = function (req, res) {
 };
 
 exports.byKeyword = function (req, res) {
+  var queryParam = req.query;
   var keyword = req.params.keyword;
-  NodePackage.find({keywords: keyword.toLowerCase()}, function (err, plugins) {
+  var qry = NodePackage.find({keywords: keyword.toLowerCase()});
+  var count = false;
+  if (queryParam.count) {
+    count = true;
+    qry.count();
+  }
+  else {
+    if (queryParam.limit) {
+      qry.limit(queryParam.limit);
+    }
+    if (queryParam.skip) {
+      qry.skip(queryParam.skip);
+    }
+    if (queryParam.sort) {
+      qry.sort(queryParam.sort);
+    }
+    else {
+      qry.sort('-githubStars');
+    }
+  }
+  qry.exec(function (err, plugins) {
     if (err) {
       return handleError(res, err);
     }
-    if (!plugins || plugins.length === 0) {
+    if (!plugins) {
       return res.send(404);
+    }
+    if (count) {
+      return res.json({count: plugins});
     }
     return res.json(plugins);
   });
