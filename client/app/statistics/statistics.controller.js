@@ -13,7 +13,26 @@ angular.module('NodePackageComperatorApp')
         }
       }
     };
-    $scope.message = 'Hello';
+    var navigator = {
+      enabled: true,
+      adaptToUpdatedData: false,
+      series: {
+        data: [],
+        dataGrouping: {
+          enabled: true
+        }
+      }
+    };
+
+    var xAxis = {
+      type: 'linear',
+      min: 1,
+      allowDecimals: false,
+      title: {
+        text: 'Listed in packages'
+      }
+    };
+
     $scope.highchart = {
       options: {
         title: {
@@ -21,28 +40,30 @@ angular.module('NodePackageComperatorApp')
         },
         chart: {
           type: 'areaspline'
-        }, xAxis: {
-          type: 'category',
-          title: {
-            text: 'Listed in packages'
-          }
-        }, yAxis: {
+        },
+        xAxis: xAxis,
+        yAxis: {
           title: {
             text: 'Keywords'
-          }
-        }
+          },
+          type: 'logarithmic',
+          minorTickInterval: 0
+        },
+        navigator: navigator
       },
       series: [statisticSerie],
       loading: true
     };
     NodePackage.statistics().$promise.then(function (statistics) {
       $scope.stats = statistics;
-
+      var chartData = [];
+      angular.forEach(statistics.distribution, function (item) {
+        chartData.push([item._id, item.total]);
+      });
       $scope.highchart.loading = false;
-      statisticSerie.data = [['In less than 10', statistics.countOfKeywordsLower10],
-        ['Between 10 and 100', statistics.countOfKeywordsBetween10And100],
-        ['Between 500 and 1000', statistics.countOfKeywordsBetween500And1000],
-        ['In more than 1000', statistics.countOfKeywordsGreater1000]];
+      statisticSerie.data = chartData;
+      navigator.series.data = chartData;
+      xAxis.max = chartData[chartData.length - 1][0];
     });
 
   });
