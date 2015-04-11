@@ -119,6 +119,8 @@ exports.statistics = function (req, res) {
           model.count({value: {$gte: 500, $lt: 1000}}, cb);
         }, countOfKeywordsGreater1000: function (cb) {
           model.count({value: {$gte: 1000}}, cb);
+        }, distribution: function (cb) {
+          model.aggregate().group({_id: '$value', total: {$sum: 1}, keys: {$push: '$_id'}}).sort({_id: 1}).exec(cb);
         }
       }, function (err, resObj) {
         if (err) {
