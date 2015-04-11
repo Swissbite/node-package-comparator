@@ -5,21 +5,14 @@ angular.module('NodePackageComperatorApp')
     var statisticSerie = {
       name: 'Keyword Distribution',
       data: [],
+      dataGrouping: {
+        smoothed: true
+      },
       dataLabels: {
         enabled: true,
         color: '#FFFFFF',
         style: {
           fontSize: '13px'
-        }
-      }
-    };
-    var navigator = {
-      enabled: true,
-      adaptToUpdatedData: false,
-      series: {
-        data: [],
-        dataGrouping: {
-          enabled: true
         }
       }
     };
@@ -32,13 +25,27 @@ angular.module('NodePackageComperatorApp')
         text: 'Listed in packages'
       }
     };
+    var navigator = {
+      enabled: true,
+      adaptToUpdatedData: false,
+      series: {
+        data: [],
+        dataGrouping: {
+          enabled: false
+        }
+      },
+      xAxis: xAxis
+    };
+
 
     $scope.highchart = {
       options: {
+
         title: {
           text: 'Distribution of keywords in packages'
         },
         chart: {
+          zoomType: 'x',
           type: 'areaspline'
         },
         xAxis: xAxis,
