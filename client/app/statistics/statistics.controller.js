@@ -37,6 +37,26 @@ angular.module('NodePackageComperatorApp')
       xAxis: xAxis
     };
 
+    function pointTooltipFormater() {
+      // Remove jshint warning because this is the point itself in highcharts.
+      /* jshint -W040 */
+      var me = this, slice = 5;
+      var text = '<p><b>' + me.y + '</b> keyword' + (me.y > 1 ? 's are' : ' is') + ' listed in <b>' + me.x + '</b> package' + (me.x > 1 ? 's' : '') + '.</p>';
+      var list = '<ul>';
+      angular.forEach(me.keywords.slice(0, slice), function (keyword) {
+        list += '<li> <code>' + keyword + '</code></li>';
+      });
+      list += '</ul>';
+      text += '<p><h6>';
+      if (me.keywords.length > slice) {
+        text += 'Keyword extract';
+      }
+      else {
+        text += 'Keywords';
+      }
+      text += '</h6>' + list + '</p>';
+      return text;
+    }
 
     $scope.highchart = {
       options: {
@@ -56,7 +76,11 @@ angular.module('NodePackageComperatorApp')
           type: 'logarithmic',
           minorTickInterval: 0
         },
-        navigator: navigator
+        navigator: navigator,
+        tooltip: {
+          pointFormatter: pointTooltipFormater,
+          useHTML: true
+        }
       },
       series: [statisticSerie],
       loading: true
@@ -65,7 +89,13 @@ angular.module('NodePackageComperatorApp')
       $scope.stats = statistics;
       var chartData = [];
       angular.forEach(statistics.distribution, function (item) {
-        chartData.push([item._id, item.total]);
+        chartData.push(
+          {
+            x: item._id, name: ' ',
+            y: item.total,
+            keywords: item.keys
+          }
+        );
       });
       $scope.highchart.loading = false;
       statisticSerie.data = chartData;
