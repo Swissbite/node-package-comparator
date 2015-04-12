@@ -2,16 +2,33 @@
     <h1>About</h1>
     <p>On <a href="https://npmjs.com">npmjs.com</a> you are able to find packages. But I found no way to compare several packages with the same keyword by users (npm stars), github stars and github forks.</p>
     <p>So I wrote this small app based on nodejs, angularjs and mongoose/mongodb to compare different packages with the same keyword.</p>
-    <p>Contribution is welcome. A live version will come soon.</p>
-    <h1>What could a user do</h1>
+
+    <p>Contribution is welcome. A live version is available on <a href="http://www.npcjs.io">npcjs.io</a>.</p>
+
+    <h2>What could a user do</h2>
     <p>Just search by keyword exact one keyword and sort. If the data is older than 24h, it will be updated. Maybe a second search might be necessary.</p>
-    <h1>What could an admin do (feature)</h1>
+
+    <h2>What could an admin do (feature)</h2>
     <ul>
         <li>Force some updates.</li>
         <li>Configure github credentials if there is a need to (see github API limits).</li>
         <li>Create other admin accounts.</li>
     </ul>
-    <p>Currently, I see no benefit for a user to have an account.</p>
+    <h2>How it works in a nutshell</h2>
+    <ol>
+        <li>
+            Check npmjs.com if there are packages with the given keyword.
+        </li>
+
+        <li>
+            Check the results if there are any links to github.com
+        </li>
+        <li>
+            Return the data back to you.
+        </li>
+    </ol>
+    <p>And yes: The data is cached on the server.</p>
+
     <h1>License</h1>
     <p>Node Package Comparator is licensed under <a href="https://www.gnu.org/licenses/agpl">GNU Affero GPL 3.0</a>.</p>
     <h1>Repo</h1>
