@@ -3,7 +3,7 @@
 describe('Controller: AboutCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('NodePackageComperatorApp'));
+  beforeEach(module('NodePackageComparator'));
 
   var AboutCtrl, scope;
 

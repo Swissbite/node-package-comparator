@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('NodePackageComperatorApp', [
+angular.module('NodePackageComparator', [
   'ngCookies',
   'ngResource',
   'ngSanitize',

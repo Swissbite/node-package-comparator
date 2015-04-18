@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('NodePackageComperatorApp')
+angular.module('NodePackageComparator')
   .filter('spaceToNbsp', function ($sanitize) {
     return function (input) {
       if (angular.isString(input)) {

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('NodePackageComperatorApp')
+angular.module('NodePackageComparator')
   .controller('StatisticsCtrl', function ($scope, NodePackage) {
     var statisticSerie = {
       name: 'Keyword Distribution',

@@ -1,9 +1,14 @@
 'use strict';
 
-angular.module('NodePackageComperatorApp').
+angular.module('NodePackageComparator').
   value('packageURLBase', '/api/nodepackages')
   .factory('NodePackage', function (packageURLBase, $resource) {
     return $resource(packageURLBase + '/:id', {id: '@_id'}, {
+      nextQuery: {
+        url: packageURLBase + '/new',
+        method: 'GET',
+        isArray: false
+      },
       byKeyword: {
         isArray: true,
         url: packageURLBase + '/byKeyword/:keyword',

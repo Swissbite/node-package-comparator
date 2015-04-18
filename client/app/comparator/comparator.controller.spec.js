@@ -3,7 +3,7 @@
 describe('Controller: ComparatorCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('NodePackageComperatorApp'));
+  beforeEach(module('NodePackageComparator'));
 
   var ComparatorCtrl, scope;
 

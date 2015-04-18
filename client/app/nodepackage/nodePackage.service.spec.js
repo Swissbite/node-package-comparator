@@ -3,7 +3,7 @@
 describe('Service: comparator', function () {
 
   // load the service's module
-  beforeEach(module('NodePackageComperatorApp'));
+  beforeEach(module('NodePackageComparator'));
 
   // instantiate service
   var NodePackage;

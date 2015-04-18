@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('NodePackageComperatorApp')
+angular.module('NodePackageComparator')
   .controller('AdminCtrl', function ($scope, $modal, $http, Auth, User) {
 
     // Use the User $resource to fetch all users

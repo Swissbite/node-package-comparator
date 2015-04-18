@@ -3,7 +3,7 @@
 describe('Filter: spaceToNbsp', function () {
 
   // load the filter's module
-  beforeEach(module('NodePackageComperatorApp'));
+  beforeEach(module('NodePackageComparator'));
 
   // initialize a new instance of the filter before each test
   var spaceToNbsp;

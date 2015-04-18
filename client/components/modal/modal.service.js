@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('NodePackageComperatorApp')
+angular.module('NodePackageComparator')
   .factory('Modal', function ($rootScope, $modal) {
     /**
      * Opens a modal

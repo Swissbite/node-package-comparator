@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('NodePackageComperatorApp')
+angular.module('NodePackageComparator')
   .controller('ComparatorCtrl',
   function ($scope, $stateParams, $state, $filter, $log, $interval, NodePackage, uiGridConstants) {
     var me = this;

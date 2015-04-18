@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('NodePackageComperatorApp')
+angular.module('NodePackageComparator')
   .controller('AboutCtrl', function ($scope) {
     $scope.message = 'Hello';
   });
