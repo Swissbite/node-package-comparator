@@ -1,21 +1,34 @@
 <div class="container">
-  <form class="thing-form">
-    <label>Search by keyword
-      <img src="assets/images/ajax-loader.gif" alt="Loading image" ng-show="isLoading"/></label>
+    <form class="thing-form">
+        <label>Search by keyword
+            <img src="assets/images/ajax-loader.gif" alt="Loading image" ng-show="isLoading"/></label>
 
-    <p class="input-group">
-      <input type="text" class="form-control" placeholder="{{keywordPlaceholder}}" ng-model="searchTerm">
+        <p class="input-group">
+            <input type="text" class="form-control" placeholder="{{keywordPlaceholder}}" ng-model="searchTerm">
       <span class="input-group-btn">
         <input type="submit" class="btn btn-primary" ui-sref="{keyword: searchTerm}" href=""
                ui-sref-opts="{reload: true}" value="Compare">
 
-        </input>
+          </input>
       </span>
-    </p>
-    <p class="text-warning" ng-show="!isLoading && comparator.gridOptions.data.length == 0">
-      No data found to this keyword. If it is the first load on this keyword, you may try again.
-    </p>
-  </form>
-  <div id="grid1" ui-grid="comparator.gridOptions" class="grid"></div>
-  <div ui-view></div>
+        </p>
+
+        <p class="text-warning" ng-show="!isLoading && comparator.gridOptions.data.length == 0">
+            No data found to this keyword. If it is the first load on this keyword, you may try again.
+        </p>
+    </form>
+    <div id="grid1" ui-grid="comparator.gridOptions" class="grid"></div>
+    <div class="row">
+
+        <label class="col-xs-12 col-md-2">Sort</label>
+        <div class="col-xs-10 col-md-10">
+            <select ng-model="comparator.paging.sort" ng-options="sort.label for sort in sorDirections track by sort.key"></select>
+        </div>
+        <div class="col-xs-2 text-right">
+            <div class="btn-group">
+                <label class="btn btn-default glyphicon glyphicon-arrow-up" ng-model="comparator.paging.asc" btn-radio="true"></label>
+                <label class="btn btn-default glyphicon glyphicon-arrow-down" ng-model="comparator.paging.asc" btn-radio="false"></label>
+            </div>
+        </div>
+    </div>
 </div>

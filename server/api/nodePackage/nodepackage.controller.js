@@ -54,17 +54,17 @@ exports.byKeyword = function (req, res) {
     qry.count();
   }
   else {
-    if (queryParam.limit) {
-      qry.limit(queryParam.limit);
+
+    if (queryParam.sort) {
+      qry.sort(queryParam.sort);
+    } else {
+      qry.sort('-githubStars');
     }
     if (queryParam.skip) {
       qry.skip(queryParam.skip);
     }
-    if (queryParam.sort) {
-      qry.sort(queryParam.sort);
-    }
-    else {
-      qry.sort('-githubStars');
+    if (queryParam.limit) {
+      qry.limit(queryParam.limit);
     }
   }
   qry.exec(function (err, plugins) {
