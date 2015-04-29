@@ -68,6 +68,22 @@ upgradeFunctions.push(function removeAllPackagesAndSchedulers(cb) {
   });
 });
 
+upgradeFunctions.push(function updateGithubStarsForkesAndWatchesIfNotSet(cb) {
+  function createUpdateFunctionWithCb(key) {
+    var searchQry = {}, update = {};
+    searchQry[key] = {$exists: false};
+    update[key] = 0;
+    return function (cb) {
+      nodePackage.update(searchQry, update, {multi: true, strict: false}, cb);
+    };
+  }
+
+  async.series([createUpdateFunctionWithCb('githubForks'), createUpdateFunctionWithCb('githubStars'),
+                createUpdateFunctionWithCb('githubWatches')], function (err) {
+    cb(err);
+  });
+});
+
 
 function upgrade(cb) {
   console.log('Start upgrade');

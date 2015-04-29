@@ -16,10 +16,10 @@ var NodePackageSchema = new Schema({
     project: String
   },
   keywords: {type: [{type: String, lowercase: true}], index: true},
-  npmStars: Number,
-  githubForks: {type: Number, index: true},
-  githubStars: {type: Number, index: true},
-  githubWatches: {type: Number, index: true},
+  npmStars: {type: Number, index: true, default: 0},
+  githubForks: {type: Number, index: true, default: 0},
+  githubStars: {type: Number, index: true, default: 0},
+  githubWatches: {type: Number, index: true, default: 0},
   _lastUpdate: {type: Date, required: true, index: true}
 });
 

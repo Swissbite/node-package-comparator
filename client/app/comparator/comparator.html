@@ -7,28 +7,94 @@
             <input type="text" class="form-control" placeholder="{{keywordPlaceholder}}" ng-model="searchTerm">
       <span class="input-group-btn">
         <input type="submit" class="btn btn-primary" ui-sref="{keyword: searchTerm}" href=""
-               ui-sref-opts="{reload: true}" value="Compare">
-
-          </input>
+               ui-sref-opts="{reload: true}" value="Compare"/>
       </span>
+            <span class="input-group-addon">{{comparator.data.count}} entries
+            </span>
         </p>
 
         <p class="text-warning" ng-show="!isLoading && comparator.gridOptions.data.length == 0">
             No data found to this keyword. If it is the first load on this keyword, you may try again.
         </p>
     </form>
-    <div id="grid1" ui-grid="comparator.gridOptions" class="grid"></div>
-    <div class="row">
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+            <td>
+            <span class="btn" ng-click="comparator.changeSortDirection('name', $event)">Name <span
+                    ng-class="{'glyphicon glyphicon glyphicon-sort-by-attributes': comparator.isSortSet('name', true) === true, 'glyphicon glyphicon glyphicon-sort-by-attributes-alt': comparator.isSortSet('name', false) === false}">
+                </span>
+            </span>
+                <input class="form-control input-sm" ng-model="filter.name"/>
+            </td>
+            <td>
+            <span class="btn" ng-click="comparator.changeSortDirection('description', $event)">Description <span
+                    ng-class="{'glyphicon glyphicon glyphicon-sort-by-attributes': comparator.isSortSet('description', true) === true, 'glyphicon glyphicon glyphicon-sort-by-attributes-alt': comparator.isSortSet('description', false) === false}">
+                </span>
+            </span>
+                <input class="form-control input-sm" ng-model="filter.description"/>
+            </td>
+            <td>
+            <span class="btn" ng-click="comparator.changeSortDirection('author', $event)">Author <span
+                    ng-class="{'glyphicon glyphicon glyphicon-sort-by-attributes': comparator.isSortSet('author', true) === true, 'glyphicon glyphicon glyphicon-sort-by-attributes-alt': comparator.isSortSet('author', false) === false}">
+                </span>
+            </span>
+                <input class="form-control input-sm" ng-model="filter.author"/>
+            </td>
+            <td>
+            <span class="btn" ng-click="comparator.changeSortDirection('version', $event)">Version
+                <span ng-class="{'glyphicon glyphicon glyphicon-sort-by-attributes': comparator.isSortSet('version', true) === true, 'glyphicon glyphicon glyphicon-sort-by-attributes-alt': comparator.isSortSet('version', false) === false}"></span>
+            </span>
+            </td>
+            <td>
+            <span class="btn" ng-click="comparator.changeSortDirection('lastModified', $event)">Last Modified
+                <span ng-class="{'glyphicon glyphicon glyphicon-sort-by-attributes': comparator.isSortSet('lastModified', true) === true, 'glyphicon glyphicon glyphicon-sort-by-attributes-alt': comparator.isSortSet('lastModified', false) === false}"></span>
+            </span>
+            </td>
+            <td>
+            <span class="btn" ng-click="comparator.changeSortDirection('npmStars', $event)">Stars @ NPM
+                <span ng-class="{'glyphicon glyphicon glyphicon-sort-by-attributes': comparator.isSortSet('npmStars', true) === true, 'glyphicon glyphicon glyphicon-sort-by-attributes-alt': comparator.isSortSet('npmStars', false) === false}"></span>
+            </span>
+            </td>
 
-        <label class="col-xs-12 col-md-2">Sort</label>
-        <div class="col-xs-10 col-md-10">
-            <select ng-model="comparator.paging.sort" ng-options="sort.label for sort in sorDirections track by sort.key"></select>
+            <td>
+            <span class="btn" ng-click="comparator.changeSortDirection('githubForks', $event)">Forks @ Github
+                <span ng-class="{'glyphicon glyphicon glyphicon-sort-by-attributes': comparator.isSortSet('githubForks', true) === true, 'glyphicon glyphicon glyphicon-sort-by-attributes-alt': comparator.isSortSet('githubForks', false) === false}"></span>
+            </span>
+            </td>
+            <td>
+            <span class="btn" ng-click="comparator.changeSortDirection('githubStars', $event)">Stars @ Github
+                <span ng-class="{'glyphicon glyphicon glyphicon-sort-by-attributes': comparator.isSortSet('githubStars', true) === true, 'glyphicon glyphicon glyphicon-sort-by-attributes-alt': comparator.isSortSet('githubStars', false) === false}"></span>
+            </span>
+            </td>
+            <td>
+            <span class="btn" ng-click="comparator.changeSortDirection('githubWatches', $event)">Watches @ Github
+                <span ng-class="{'glyphicon glyphicon glyphicon-sort-by-attributes': comparator.isSortSet('githubWatches', true) === true, 'glyphicon glyphicon glyphicon-sort-by-attributes-alt': comparator.isSortSet('githubWatches', false) === false}"></span>
+            </span>
+            </td>
+            </thead>
+            <tbody>
+            <tr ng-repeat="package in comparator.data.results">
+                <td><a ui-sref="package({id: package._id})">{{package.name}}</a></td>
+                <td>{{package.description}}</td>
+                <td>{{package.author}}</td>
+                <td>{{package.version}}</td>
+                <td>{{package.lastModified | date : 'yy-MM-dd HH:mm'}}</td>
+                <td>{{package.npmStars}}</td>
+                <td>{{package.githubForks}}</td>
+                <td>{{package.githubStars}}</td>
+                <td>{{package.githubWatches}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <pagination total-items="comparator.data.count" items-per-page="comparator.pagination.limit"
+                        ng-model="comparator.pagination.currentPage" max-size="comparator.pagination.maxSize"
+                        class="pagination-sm" boundary-links="true" rotate="false"
+                        num-pages="comparator.pagination.numPages"></pagination>
         </div>
-        <div class="col-xs-2 text-right">
-            <div class="btn-group">
-                <label class="btn btn-default glyphicon glyphicon-arrow-up" ng-model="comparator.paging.asc" btn-radio="true"></label>
-                <label class="btn btn-default glyphicon glyphicon-arrow-down" ng-model="comparator.paging.asc" btn-radio="false"></label>
-            </div>
-        </div>
+
     </div>
 </div>

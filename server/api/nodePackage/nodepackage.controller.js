@@ -9,12 +9,64 @@ var Setting = require('../setting/setting.model');
 
 // Get list of plugins
 exports.index = function (req, res) {
-  NodePackage.find(function (err, nodePackages) {
+  var query = req.query;
+  var limit = query.limit ? query.limit : 5000;
+  var sort = query.sort ? query.sort : 'githubStars DESC';
+  NodePackage.find().sort(sort).limit(limit).exec(function (err, nodePackages) {
     if (err) {
       return handleError(res, err);
     }
     res.status(200);
     return res.json(nodePackages);
+  });
+};
+
+exports.newIndex = function (req, res) {
+  var query = req.body;
+  var keyword = query.keyword;
+  var limit = query.limit ? query.limit : 5000;
+  var sorts = query.sorts && query.sorts.length > 0 ? query.sorts : [{"field": "githubStars", "ascending": false}];
+  var skip = query.skip ? query.skip : 0;
+  var filters = query.filters ? query.filters : undefined;
+  var queryParam = {};
+  if (keyword) {
+    queryParam.keywords = keyword.toLocaleLowerCase();
+  }
+  _.forIn(filters, function (value, key) {
+    if (value) {
+      queryParam[key] = {$regex: new RegExp(value, 'i')};
+    }
+  });
+  console.log(queryParam);
+
+  async.parallel({
+    count: function count(cb) {
+
+      NodePackage.count(queryParam, cb);
+    }, results: function result(cb) {
+      var query = NodePackage.find(queryParam);
+      var sortString = ' ';
+
+      console.log(sorts, sortString);
+      _.forEach(sorts, function (sort) {
+        var elem = sort.ascending ? '' : '-';
+        console.log('elem1:', elem, sortString);
+        elem += sort.field;
+
+        console.log('elem2:', elem, sortString);
+        sortString += elem + ' ';
+
+        console.log('elem3:', elem, sortString);
+      });
+      console.log(sorts, sortString);
+      query.sort(sortString.trim()).skip(skip).limit(limit);
+      query.exec(cb);
+    }
+  }, function (err, data) {
+    if (err) {
+      return handleError(res, err);
+    }
+    res.json(data);
   });
 };
 
@@ -57,7 +109,8 @@ exports.byKeyword = function (req, res) {
 
     if (queryParam.sort) {
       qry.sort(queryParam.sort);
-    } else {
+    }
+    else {
       qry.sort('-githubStars');
     }
     if (queryParam.skip) {

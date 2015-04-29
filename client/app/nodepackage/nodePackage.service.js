@@ -6,7 +6,7 @@ angular.module('NodePackageComparator').
     return $resource(packageURLBase + '/:id', {id: '@_id'}, {
       nextQuery: {
         url: packageURLBase + '/new',
-        method: 'GET',
+        method: 'POST',
         isArray: false
       },
       byKeyword: {
