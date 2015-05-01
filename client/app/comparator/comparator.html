@@ -6,8 +6,8 @@
         <p class="input-group">
             <input type="text" class="form-control" placeholder="{{keywordPlaceholder}}" ng-model="searchTerm">
       <span class="input-group-btn">
-        <input type="submit" class="btn btn-primary" ui-sref="{keyword: searchTerm}" href=""
-               ui-sref-opts="{reload: true}" value="Compare"/>
+        <input type="submit" class="btn btn-primary" ui-sref="{keyword: searchTerm}"
+               ui-sref-opts="{reload: false}" value="Compare"/>
       </span>
             <span class="input-group-addon">{{comparator.data.count}} entries
             </span>
@@ -22,54 +22,54 @@
             <thead>
             <td>
             <span class="btn" ng-click="comparator.changeSortDirection('name', $event)">Name <span
-                    ng-class="{'glyphicon glyphicon glyphicon-sort-by-attributes': comparator.isSortSet('name', true) === true, 'glyphicon glyphicon glyphicon-sort-by-attributes-alt': comparator.isSortSet('name', false) === false}">
+                    ng-class="{'glyphicon glyphicon glyphicon-sort-by-attributes': comparator.isSortSet('name', true) === true, 'glyphicon glyphicon glyphicon-sort-by-attributes-alt': comparator.isSortSet('name', false) === true}">
                 </span>
             </span>
                 <input class="form-control input-sm" ng-model="filter.name"/>
             </td>
             <td>
             <span class="btn" ng-click="comparator.changeSortDirection('description', $event)">Description <span
-                    ng-class="{'glyphicon glyphicon glyphicon-sort-by-attributes': comparator.isSortSet('description', true) === true, 'glyphicon glyphicon glyphicon-sort-by-attributes-alt': comparator.isSortSet('description', false) === false}">
+                    ng-class="{'glyphicon glyphicon glyphicon-sort-by-attributes': comparator.isSortSet('description', true) === true, 'glyphicon glyphicon glyphicon-sort-by-attributes-alt': comparator.isSortSet('description', false) === true}">
                 </span>
             </span>
                 <input class="form-control input-sm" ng-model="filter.description"/>
             </td>
             <td>
             <span class="btn" ng-click="comparator.changeSortDirection('author', $event)">Author <span
-                    ng-class="{'glyphicon glyphicon glyphicon-sort-by-attributes': comparator.isSortSet('author', true) === true, 'glyphicon glyphicon glyphicon-sort-by-attributes-alt': comparator.isSortSet('author', false) === false}">
+                    ng-class="{'glyphicon glyphicon glyphicon-sort-by-attributes': comparator.isSortSet('author', true) === true, 'glyphicon glyphicon glyphicon-sort-by-attributes-alt': comparator.isSortSet('author', false) === true}">
                 </span>
             </span>
                 <input class="form-control input-sm" ng-model="filter.author"/>
             </td>
             <td>
             <span class="btn" ng-click="comparator.changeSortDirection('version', $event)">Version
-                <span ng-class="{'glyphicon glyphicon glyphicon-sort-by-attributes': comparator.isSortSet('version', true) === true, 'glyphicon glyphicon glyphicon-sort-by-attributes-alt': comparator.isSortSet('version', false) === false}"></span>
+                <span ng-class="{'glyphicon glyphicon glyphicon-sort-by-attributes': comparator.isSortSet('version', true) === true, 'glyphicon glyphicon glyphicon-sort-by-attributes-alt': comparator.isSortSet('version', false) === true}"></span>
             </span>
             </td>
             <td>
             <span class="btn" ng-click="comparator.changeSortDirection('lastModified', $event)">Last Modified
-                <span ng-class="{'glyphicon glyphicon glyphicon-sort-by-attributes': comparator.isSortSet('lastModified', true) === true, 'glyphicon glyphicon glyphicon-sort-by-attributes-alt': comparator.isSortSet('lastModified', false) === false}"></span>
+                <span ng-class="{'glyphicon glyphicon glyphicon-sort-by-attributes': comparator.isSortSet('lastModified', true) === true, 'glyphicon glyphicon glyphicon-sort-by-attributes-alt': comparator.isSortSet('lastModified', false) === true}"></span>
             </span>
             </td>
             <td>
             <span class="btn" ng-click="comparator.changeSortDirection('npmStars', $event)">Stars @ NPM
-                <span ng-class="{'glyphicon glyphicon glyphicon-sort-by-attributes': comparator.isSortSet('npmStars', true) === true, 'glyphicon glyphicon glyphicon-sort-by-attributes-alt': comparator.isSortSet('npmStars', false) === false}"></span>
+                <span ng-class="{'glyphicon glyphicon glyphicon-sort-by-attributes': comparator.isSortSet('npmStars', true) === true, 'glyphicon glyphicon glyphicon-sort-by-attributes-alt': comparator.isSortSet('npmStars', false) === true}"></span>
             </span>
             </td>
 
             <td>
             <span class="btn" ng-click="comparator.changeSortDirection('githubForks', $event)">Forks @ Github
-                <span ng-class="{'glyphicon glyphicon glyphicon-sort-by-attributes': comparator.isSortSet('githubForks', true) === true, 'glyphicon glyphicon glyphicon-sort-by-attributes-alt': comparator.isSortSet('githubForks', false) === false}"></span>
+                <span ng-class="{'glyphicon glyphicon glyphicon-sort-by-attributes': comparator.isSortSet('githubForks', true) === true, 'glyphicon glyphicon glyphicon-sort-by-attributes-alt': comparator.isSortSet('githubForks', false) === true}"></span>
             </span>
             </td>
             <td>
             <span class="btn" ng-click="comparator.changeSortDirection('githubStars', $event)">Stars @ Github
-                <span ng-class="{'glyphicon glyphicon glyphicon-sort-by-attributes': comparator.isSortSet('githubStars', true) === true, 'glyphicon glyphicon glyphicon-sort-by-attributes-alt': comparator.isSortSet('githubStars', false) === false}"></span>
+                <span ng-class="{'glyphicon glyphicon glyphicon-sort-by-attributes': comparator.isSortSet('githubStars', true) === true, 'glyphicon glyphicon glyphicon-sort-by-attributes-alt': comparator.isSortSet('githubStars', false) === true}"></span>
             </span>
             </td>
             <td>
             <span class="btn" ng-click="comparator.changeSortDirection('githubWatches', $event)">Watches @ Github
-                <span ng-class="{'glyphicon glyphicon glyphicon-sort-by-attributes': comparator.isSortSet('githubWatches', true) === true, 'glyphicon glyphicon glyphicon-sort-by-attributes-alt': comparator.isSortSet('githubWatches', false) === false}"></span>
+                <span ng-class="{'glyphicon glyphicon glyphicon-sort-by-attributes': comparator.isSortSet('githubWatches', true) === true, 'glyphicon glyphicon glyphicon-sort-by-attributes-alt': comparator.isSortSet('githubWatches', false) === true}"></span>
             </span>
             </td>
             </thead>

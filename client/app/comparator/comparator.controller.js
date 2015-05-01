@@ -54,6 +54,7 @@ angular.module('NodePackageComparator')
       if (!angular.isNumber(index)) {
         if (!isShiftSet) {
           queryObj.sorts = [{field: field, ascending: true}];
+          sortMap = {};
         }
         else {
           queryObj.sorts.push({field: field, ascending: true});
