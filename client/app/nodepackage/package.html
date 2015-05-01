@@ -17,6 +17,8 @@
             <dd>{{package.author}}</dd>
             <dt>Link to NPM</dt>
             <dd><a ng-href="//npmjs.org/{{package.name}}">{{package.name}}</a></dd>
+              <dt>Last package update from npm/github</dt>
+              <dd>{{package._lastUpdate | date}}</dd>
               <dt ng-show="package.readme">Readme</dt>
               <dd ng-show="package.readme" marked="package.readme"></dd>
           </dl>
