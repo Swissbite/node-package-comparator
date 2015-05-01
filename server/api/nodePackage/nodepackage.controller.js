@@ -67,7 +67,13 @@ exports.newIndex = function (req, res) {
       return handleError(res, err);
     }
     res.json(data);
+
   });
+
+  Scheduler.updateKeywords();
+  if (keyword && _.isString(keyword)) {
+    Scheduler.updatePackages(keyword.toLowerCase());
+  }
 };
 
 // Get a single nodePackage
@@ -96,45 +102,7 @@ exports.byName = function (req, res) {
   })
 };
 
-exports.byKeyword = function (req, res) {
-  var queryParam = req.query;
-  var keyword = req.params.keyword;
-  var qry = NodePackage.find({keywords: keyword.toLowerCase()});
-  var count = false;
-  if (queryParam.count) {
-    count = true;
-    qry.count();
-  }
-  else {
 
-    if (queryParam.sort) {
-      qry.sort(queryParam.sort);
-    }
-    else {
-      qry.sort('-githubStars');
-    }
-    if (queryParam.skip) {
-      qry.skip(queryParam.skip);
-    }
-    if (queryParam.limit) {
-      qry.limit(queryParam.limit);
-    }
-  }
-  qry.exec(function (err, plugins) {
-    if (err) {
-      return handleError(res, err);
-    }
-    if (!plugins) {
-      return res.send(404);
-    }
-    if (count) {
-      return res.json({count: plugins});
-    }
-    return res.json(plugins);
-  });
-  Scheduler.updateKeywords();
-  Scheduler.updatePackages(keyword.toLowerCase());
-};
 
 exports.statistics = function (req, res) {
   var mapReduceCollectionName = 'package_keyword_statistics';
