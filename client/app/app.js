@@ -8,8 +8,6 @@ angular.module('NodePackageComparator', [
   'btford.socket-io',
   'ui.router',
   'ui.bootstrap',
-  'ui.grid',
-  'ui.grid.selection',
   'highcharts-ng',
   'hc.marked'
 ])
