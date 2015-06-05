@@ -25,21 +25,22 @@
                     ng-class="{'glyphicon glyphicon glyphicon-sort-by-attributes': comparator.isSortSet('name', true) === true, 'glyphicon glyphicon glyphicon-sort-by-attributes-alt': comparator.isSortSet('name', false) === true}">
                 </span>
             </span>
-                <input class="form-control input-sm" ng-model="filter.name"/>
+                <input class="form-control input-sm" ng-model="filter.name" ng-model-options="{ debounce: 250 }"/>
             </td>
             <td>
             <span class="btn" ng-click="comparator.changeSortDirection('description', $event)">Description <span
                     ng-class="{'glyphicon glyphicon glyphicon-sort-by-attributes': comparator.isSortSet('description', true) === true, 'glyphicon glyphicon glyphicon-sort-by-attributes-alt': comparator.isSortSet('description', false) === true}">
                 </span>
             </span>
-                <input class="form-control input-sm" ng-model="filter.description"/>
+                <input class="form-control input-sm" ng-model="filter.description"
+                       ng-model-options="{ debounce: 250 }"/>
             </td>
             <td>
             <span class="btn" ng-click="comparator.changeSortDirection('author', $event)">Author <span
                     ng-class="{'glyphicon glyphicon glyphicon-sort-by-attributes': comparator.isSortSet('author', true) === true, 'glyphicon glyphicon glyphicon-sort-by-attributes-alt': comparator.isSortSet('author', false) === true}">
                 </span>
             </span>
-                <input class="form-control input-sm" ng-model="filter.author"/>
+                <input class="form-control input-sm" ng-model="filter.author" ng-model-options="{ debounce: 250 }"/>
             </td>
             <td>
             <span class="btn" ng-click="comparator.changeSortDirection('version', $event)">Version
