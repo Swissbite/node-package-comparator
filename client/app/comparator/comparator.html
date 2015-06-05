@@ -89,6 +89,11 @@
             </tbody>
         </table>
     </div>
+    <div class="row" ng-show="comparator.isLoading">
+        <div class="col-xs-12">
+            <img src="assets/images/ajax-loader.gif" alt="Loading image"/> Data loading from server...
+        </div>
+    </div>
     <div class="row">
         <div class="col-xs-12">
             <pagination total-items="comparator.data.count" items-per-page="comparator.pagination.limit"

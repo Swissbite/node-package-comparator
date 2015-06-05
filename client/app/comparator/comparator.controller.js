@@ -39,7 +39,10 @@ angular.module('NodePackageComparator')
     }
 
     function nextQuery() {
+      me.isLoading = true;
+      me.data = [];
       NodePackage.nextQuery(queryObj).$promise.then(function (res) {
+        me.isLoading = false;
         console.log(res);
         me.data = res;
         if (res.results.length === 0) {
