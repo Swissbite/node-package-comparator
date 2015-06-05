@@ -1,4 +1,10 @@
-<div class="container">
+<div class="container" ng-show="isLoading">
+    <h1>Statistics</h1>
+    <alert type="info"><span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Statistics update in
+        progress. Please wait.
+    </alert>
+</div>
+<div class="container" ng-hide="isLoading">
     <h1>Statistics</h1>
     <ul class="list-unstyled">
         <li>Number of current known keywords: {{stats.countOfKeywords}}</li>

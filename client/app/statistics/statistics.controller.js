@@ -68,6 +68,9 @@ angular.module('NodePackageComparator')
           zoomType: 'x',
           type: 'areaspline'
         },
+        plotOptions: {
+          size: '80%'
+        },
         xAxis: xAxis,
         yAxis: {
           title: {
@@ -85,6 +88,7 @@ angular.module('NodePackageComparator')
       series: [statisticSerie],
       loading: true
     };
+    $scope.isLoading = true;
     NodePackage.statistics().$promise.then(function (statistics) {
       $scope.stats = statistics;
       var chartData = [];
@@ -97,6 +101,7 @@ angular.module('NodePackageComparator')
           }
         );
       });
+      $scope.isLoading = false;
       $scope.highchart.loading = false;
       statisticSerie.data = chartData;
       navigator.series.data = chartData;
