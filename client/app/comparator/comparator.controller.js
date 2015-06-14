@@ -40,7 +40,7 @@ angular.module('NodePackageComparator')
 
     function nextQuery() {
       me.isLoading = true;
-      me.data = [];
+      //me.data = [];
       NodePackage.nextQuery(queryObj).$promise.then(function (res) {
         me.isLoading = false;
         console.log(res);

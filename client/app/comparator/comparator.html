@@ -74,7 +74,7 @@
             </span>
             </td>
             </thead>
-            <tbody>
+            <tbody ng-hide="comparator.isLoading">
             <tr ng-repeat="package in comparator.data.results">
                 <td><a ui-sref="package({id: package._id})">{{package.name}}</a></td>
                 <td>{{package.description}}</td>
