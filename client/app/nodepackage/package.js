@@ -6,6 +6,6 @@ angular.module('NodePackageComparator')
       .state('package', {
         url: '/nodepackage/:id',
         templateUrl: 'app/nodepackage/package.html',
-        controller: 'PackageCtrl'
+        controller: 'PackageCtrl',
       });
   });

@@ -189,12 +189,14 @@ function refreshKeywordsScheduler(instance) {
       }, function updateAllPackageSchedulers(err, data) {
         var keywords = [];
         var amountMap = {};
+        if (data && data.rows) {
         _.forEach(data.rows, function selectKeyword(elem) {
           if (elem.key.length > 0) {
             keywords.push(elem.key[0]);
             amountMap[elem.key[0]] = elem.value;
           }
         });
+        }
 
         async.parallel([
           function (cb) {
