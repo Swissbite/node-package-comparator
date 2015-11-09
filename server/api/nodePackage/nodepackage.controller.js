@@ -3,6 +3,7 @@
 var _ = require('lodash');
 var async = require('async');
 var Scheduler = require('../scheduler/scheduler.model');
+var scheduleManager = require('../scheduler/scheduleManager');
 var NodePackage = require('./nodepackage.model.js');
 var mapReduceModelCreator = require('../../components/MapReduceSchema');
 var Setting = require('../setting/setting.model');
@@ -69,10 +70,10 @@ exports.newIndex = function (req, res) {
     res.json(data);
 
   });
+  scheduleManager.updateKeywords();
 
-  Scheduler.updateKeywords();
   if (keyword && _.isString(keyword)) {
-    Scheduler.updatePackages(keyword.toLowerCase());
+    scheduleManager.updatePackage(keyword.toLowerCase());
   }
 };
 

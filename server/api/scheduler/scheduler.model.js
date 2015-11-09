@@ -22,11 +22,14 @@ var mongoose = require('mongoose'),
   async = require('async'),
   https = require('https'),
   http = require('http'),
+  q = require('q'),
   Schema = mongoose.Schema,
   environment = require('../../config/environment'),
   NodePackage = require('../nodePackage/nodepackage.model');
 
 
+var child_process = require('child_process');
+var updateAsChild;
 /**
  * @type {Schema}
  * @name SchedulerSchema
@@ -175,12 +178,14 @@ function checkUrlForGithubInfos(url) {
  */
 function refreshKeywordsScheduler(instance) {
   var toRefresh = checkIfAllowedToRun(instance);
+  var promise = q.defer();
   if (toRefresh) {
     setActiveAndLastRun(instance, function refreshKeywords(err, scheduler) {
       var registry = environment.registry;
 
       if (err) {
         console.log(err);
+        promise.reject(err);
         return void 0;
       }
 
@@ -271,18 +276,28 @@ function refreshKeywordsScheduler(instance) {
 
             });
           }
-        ], function finish() {
+        ], function finish(err) {
           setDoneAndLastFinsh(scheduler, function () {
+            if (err) {
+              promise.reject(err);
+            }
+            else {
+              promise.resolve({updateFinished: true, updateAllowed: true});
+            }
           });
         });
 
       });
     });
   }
-  return toRefresh;
+  else {
+    promise.resolve({updateFinished: true, updateAllowed: false})
+  }
+  return promise;
 }
 
 function refreshPackageScheduler(instance) {
+  var promise = q.defer();
   console.log('called ' + instance.keyword);
   var toRefresh = checkIfAllowedToRun(instance);
   if (toRefresh) {
@@ -430,58 +445,36 @@ function refreshPackageScheduler(instance) {
 
 
         async.parallelLimit(asyncDBSearchCalls, 500, function (err, calls) {
-          async.parallelLimit(calls, 500, function () {
-            setDoneAndLastFinsh(scheduler, noop);
+          async.parallelLimit(calls, 500, function (err) {
+            setDoneAndLastFinsh(scheduler, function () {
+              if (err) {
+                promise.reject(err);
+              }
+              else {
+                promise.resolve({updateFinished: true, updateAllowed: true});
+              }
+            });
           });
         });
       });
     });
   }
-  return toRefresh;
+  else {
+    promise.resolve({updateFinished: true, updateAllowed: false})
+  }
+  return promise;
 }
 
-SchedulerSchema.methods.run = function run() {
+SchedulerSchema.methods.run = function run(finishedCallback) {
   var me = this;
+  console.log('start running', me);
   if (me.type === 'keywords') {
     return refreshKeywordsScheduler(me);
   }
   else if (me.type === 'package') {
     return refreshPackageScheduler(me);
   }
-  return false;
+  return q.defer().resolve(false);
 };
-
-SchedulerSchema.static('updateKeywords', function (cb) {
-  Scheduler.findOne({type: 'keywords'}, function (err, scheduler) {
-    if (!scheduler) {
-      scheduler = new Scheduler({type: 'keywords'});
-    }
-    if (cb && 'function' === typeof cb) {
-      cb(scheduler.run());
-    }
-    else {
-      scheduler.run();
-    }
-  })
-});
-
-SchedulerSchema.static('updatePackages', function (keyword, cb) {
-  console.log('update nodePackage', keyword);
-  Scheduler.findOne({type: 'package', keyword: keyword}, function (err, scheduler) {
-    var hasCb = cb && 'function' === typeof cb;
-    if (!scheduler) {
-      if (hasCb) {
-        cb(null, false);
-      }
-      return void 0;
-    }
-    if (hasCb) {
-      cb(scheduler.run());
-    }
-    else {
-      scheduler.run();
-    }
-  })
-});
 
 module.exports = Scheduler = mongoose.model('Scheduler', SchedulerSchema);

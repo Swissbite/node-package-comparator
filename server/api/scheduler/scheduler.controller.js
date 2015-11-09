@@ -18,6 +18,8 @@
 
 var _ = require('lodash');
 var Scheduler = require('./scheduler.model');
+var child_process = require('child_process');
+var updaterChildProcess;
 
 // Get list of schedulers
 exports.index = function (req, res) {
@@ -125,9 +127,9 @@ exports.keywords = function (req, res) {
       res.json(200, schedulers);
     }
   });
-  Scheduler.updateKeywords();
 };
 
 function handleError(res, err) {
   return res.send(500, err);
 }
+
