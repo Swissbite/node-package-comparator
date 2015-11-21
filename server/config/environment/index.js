@@ -46,7 +46,7 @@ all = {
       hostname: 'api.github.com',
       port: 443,
       headers: {
-        'user-agent': 'node v.0.10'
+        'user-agent': 'node v.4.2.2'
       }
     },
     repoPathPrefix: '/repos/',

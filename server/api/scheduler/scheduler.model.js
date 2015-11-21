@@ -154,7 +154,7 @@ function getRegistryData(url, queryParams, callback) {
  * @param url Found url.
  * @returns {object | null} Returns infos about github if there are some.
  */
-function checkUrlForGithubInfos(url) {
+function checkUrlForGithupGetParams(url) {
   var tmp, projectName;
   if (!url) {
     return null;
@@ -327,9 +327,9 @@ function refreshPackageScheduler(instance) {
                 cb(err);
                 return void 0;
               }
-              githubData = checkUrlForGithubInfos(npmInfo.repository ? npmInfo.repository.url : null);
+              githubData = checkUrlForGithupGetParams(npmInfo.repository ? npmInfo.repository.url : null);
               if (!githubData && npmInfo.homepage) {
-                githubData = checkUrlForGithubInfos(npmInfo.homepage);
+                githubData = checkUrlForGithupGetParams(npmInfo.homepage);
               }
               packageData = {
                 name: npmInfo.name,

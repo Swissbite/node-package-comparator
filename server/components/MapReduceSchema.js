@@ -12,4 +12,4 @@ var MapReducedSchema = new Schema({
 
 module.exports = function (collection) {
   return mongoose.model(collection, MapReducedSchema);
-}
+};

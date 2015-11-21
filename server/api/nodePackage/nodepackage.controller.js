@@ -30,8 +30,18 @@ exports.newIndex = function (req, res) {
   var skip = query.skip ? query.skip : 0;
   var filters = query.filters ? query.filters : undefined;
   var queryParam = {};
+  var keywords;
   if (keyword) {
-    queryParam.keywords = keyword.toLocaleLowerCase();
+    
+    keywords = keyword.split(' ');
+    _.forEach(keywords, function(keyword) {
+      var keywordRegexp = new RegExp(keyword.toLocaleLowerCase(), 'i');
+      queryParam.$and = queryParam.$and || [];
+      queryParam.$and.push({$or : [
+      {keywords: keywordRegexp},      
+      {name: keywordRegexp},
+      {author: keywordRegexp}]});
+    });
   }
   _.forIn(filters, function (value, key) {
     if (value) {
@@ -39,7 +49,7 @@ exports.newIndex = function (req, res) {
     }
   });
   console.log(queryParam);
-
+  
   async.parallel({
     count: function count(cb) {
 

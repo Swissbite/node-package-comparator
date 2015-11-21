@@ -1,8 +1,9 @@
 'use strict';
-
+(function(){
 angular.module('NodePackageComparator')
-  .controller('ComparatorCtrl',
-  function ($scope, $stateParams, $state, $filter, $log, $interval, NodePackage) {
+  .controller('ComparatorCtrl', ComperatorController);
+  ComperatorController.$inject=['$scope', '$stateParams', '$log', '$interval', 'NodePackage'];
+  function ComperatorController($scope, $stateParams, $log, $interval, NodePackage) {
     var me = this;
 
     var queryObj = {
@@ -126,4 +127,5 @@ angular.module('NodePackageComparator')
         stopInterval();
       }
     });
-  });
+  }
+})();
